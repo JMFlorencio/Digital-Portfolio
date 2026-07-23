@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joey Florencio</title>
+<style>
+  :root{
+    --bg-0:#050906;
+    --panel-line: rgba(57,255,143,0.25);
+    --green:#39ff8f;
+  }
+  *{box-sizing:border-box;}
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:#000;
+    color:#eafff3;
+    font-family:'Arial Narrow', Arial, sans-serif;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{ display:block; max-width:100%; }
+
+  .site{ max-width:1400px; margin:0 auto; overflow:hidden; }
+
+  /* ---------------- HERO ---------------- */
+  .hero{
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1.1fr;
+    align-items:stretch;
+    min-height:640px;
+    overflow:hidden;
+    background:#050906;
+  }
+  .hero-bg{ position:absolute; inset:0; z-index:0; }
+  .hero-bg img{ width:100%; height:100%; object-fit:cover; }
+
+  .hero-head{ position:relative; z-index:1; display:flex; align-items:flex-end; }
+  .hero-head img{ width:100%; height:auto; align-self:flex-end; }
+
+  .hero-content{ position:relative; z-index:2; padding:32px 48px 48px; display:flex; flex-direction:column; gap:72px; justify-content:flex-start; }
+
+  nav.nav-links{ display:flex; justify-content:flex-end; align-items:center; gap:14px; }
+  nav.nav-links a img{ height:20px; width:auto; }
+
+  .hero-mid{ display:flex; flex-direction:column; align-items:flex-end; gap:14px; }
+
+  .name-graphic{ align-self:flex-end; width:min(560px, 100%); margin-top:30px; opacity:0; animation: nameGraphicIn 0.9s ease-in 0.15s forwards; }
+  .name-graphic img{ width:100%; height:auto; }
+
+  @keyframes nameGraphicIn{
+    from{ opacity:0; transform:translateY(26px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .hero-cta{ margin-top:22px; }
+  .btn-watch{ display:inline-block; transition:transform .2s, filter .2s; }
+  .btn-watch:hover{ transform:translateY(-2px); filter:brightness(1.15); }
+  .btn-watch img{ height:64px; width:auto; }
+
+  /* ---------------- SECTIONS ---------------- */
+  section{ padding:80px 48px; }
+  .section-heading img{ height:34px; width:auto; }
+
+  .about-frames{
+    display:flex;
+    align-items:flex-end;
+    gap:6%;
+    padding:70px 48px 120px;
+  }
+  .frame-card{ flex:1 1 0; max-width:480px; }
+  .frame-card img{ width:100%; height:auto; border-radius:14px; }
+  .frame-card.f1{ align-self:flex-start; max-width:420px; }
+
+  .project-categories{ display:flex; flex-direction:column; gap:64px; padding:10px 48px 60px; }
+
+  .category-header{ display:flex; align-items:center; gap:18px; margin-bottom:24px; }
+  .category-header img{ height:28px; width:auto; }
+  .cat-line{ flex:1; height:1px; background:var(--panel-line); }
+
+  .project-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; }
+  .project-item{ aspect-ratio:4/3; border-radius:14px; overflow:hidden; }
+  .project-item img{ width:100%; height:100%; object-fit:cover; border-radius:14px; }
+
+  .project-placeholder{
+    width:100%; height:100%;
+    border:1px dashed var(--panel-line);
+    border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    color:#4a6a5a;
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    text-align:center;
+    padding:16px;
+    transition:border-color .2s, color .2s;
+  }
+  .project-placeholder:hover{ border-color:var(--green); color:var(--green); }
+
+  .section-gap{ height:140px; }
+
+  footer{ padding:30px 48px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#4a6a5a; border-top:1px solid var(--panel-line); }
+
+  @media (max-width: 900px){
+    .hero{ display:flex; flex-direction:column; min-height:auto; }
+    .hero-head{ order:2; width:55%; margin:14px auto 0; }
+    .hero-head img{ width:100%; }
+    .hero-content{ order:1; padding:22px 20px 24px; justify-content:flex-start; }
+
+    nav.nav-links{ justify-content:center; flex-wrap:wrap; gap:16px; }
+    nav.nav-links a img{ height:18px; }
+
+    .hero-mid{ align-items:center; margin-top:22px; gap:12px; }
+    .name-graphic{ align-self:center; width:min(420px, 90%); }
+    .hero-cta{ align-self:center; margin-top:18px; }
+    .btn-watch img{ height:52px; }
+
+    section{ padding:50px 20px; }
+    .about-frames{ flex-direction:column; align-items:center; padding:50px 20px 70px; gap:24px; }
+    .frame-card, .frame-card.f1{ width:80%; align-self:center; }
+    .section-gap{ height:70px; }
+
+    .project-categories{ padding:10px 20px 40px; gap:44px; }
+    .category-header img{ height:20px; }
+    .project-grid{ grid-template-columns:1fr; gap:16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="site">
+
+  <!-- ================= HERO ================= -->
+  <div class="hero">
+    <div class="hero-bg"><img src="assets/HEADER BG.png" alt=""></div>
+
+    <div class="hero-head">
+      <img src="assets/HEAD.png" alt="Joey Florencio">
+    </div>
+
+    <div class="hero-content">
+      <nav class="nav-links">
+        <a href="#about"><img src="assets/ABOUT ME.png" alt="About Me"></a>
+        <a href="#projects"><img src="assets/PROJECTS MENU.png" alt="Projects"></a>
+        <a href="#contact"><img src="assets/CONTACT US.png" alt="Contact Us"></a>
+      </nav>
+
+      <div class="hero-mid">
+        <div class="name-graphic">
+          <img src="assets/JOEY FLORENCIO.png" alt="Joey Florencio">
+        </div>
+        <div class="hero-cta">
+          <a href="#" class="btn-watch"><img src="assets/WATCH DEMO.png" alt="Watch Demo"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about" style="padding-bottom:0;">
+    <div class="section-heading">
+      <img src="assets/ABOUT ME SECTION.png" alt="About Me">
+    </div>
+  </section>
+
+  <div class="about-frames">
+    <div class="frame-card f1">
+      <img src="assets/FRAME 1.png" alt="Frame 1">
+    </div>
+    <div class="frame-card f2">
+      <img src="assets/FRAME 2.png" alt="Frame 2">
+    </div>
+  </div>
+
+  <!-- ================= PROJECTS ================= -->
+  <section id="projects" style="padding-bottom:0;">
+    <div class="section-heading">
+      <img src="assets/PROJECTS SECTION.png" alt="Projects">
+    </div>
+  </section>
+
+  <div class="project-categories">
+
+    <div class="project-category">
+      <div class="category-header">
+        <img src="assets/SCENE DESIGN.png" alt="Scene Design">
+        <span class="cat-line"></span>
+      </div>
+      <div class="project-grid">
+        <div class="project-item"><div class="project-placeholder">+ Add Scene Design Work</div></div>
+        <div class="project-item"><div class="project-placeholder">+ Add Scene Design Work</div></div>
+        <div class="project-item"><div class="project-placeholder">+ Add Scene Design Work</div></div>
+      </div>
+    </div>
+
+    <div class="project-category">
+      <div class="category-header">
+        <img src="assets/LOGO ILLUSTRATIONS.png" alt="Logo Illustrations">
+        <span class="cat-line"></span>
+      </div>
+      <div class="project-grid">
+        <div class="project-item"><div class="project-placeholder">+ Add Logo Illustration</div></div>
+        <div class="project-item"><div class="project-placeholder">+ Add Logo Illustration</div></div>
+        <div class="project-item"><div class="project-placeholder">+ Add Logo Illustration</div></div>
+      </div>
+    </div>
+
+    <div class="project-category">
+      <div class="category-header">
+        <img src="assets/MOTION GRAPHICS.png" alt="Motion Graphics">
+        <span class="cat-line"></span>
+      </div>
+      <div class="project-grid">
+        <div class="project-item"><div class="project-placeholder">+ Add Motion Graphics Work</div></div>
+        <div class="project-item"><div class="project-placeholder">+ Add Motion Graphics Work</div></div>
+        <div class="project-item"><div class="project-placeholder">+ Add Motion Graphics Work</div></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="section-gap"></div>
+
+  <!-- ================= CONTACT ================= -->
+  <section id="contact" style="padding-bottom:0;">
+    <div class="section-heading">
+      <img src="assets/CONTACT US SECTION.png" alt="Contact Us">
+    </div>
+  </section>
+  <div class="section-gap"></div>
+
+  <footer>© 2026 Joey Florencio</footer>
+
+</div>
+
+</body>
+</html>
