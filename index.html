@@ -163,8 +163,115 @@
   .cat-line{ flex:1; height:1px; background:var(--panel-line); }
 
   .project-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; }
-  .project-item{ aspect-ratio:16/9; border-radius:14px; overflow:hidden; }
-  .project-item img{ width:100%; height:100%; object-fit:cover; border-radius:14px; }
+  .project-item{ position:relative; aspect-ratio:16/9; border-radius:14px; overflow:hidden; cursor:pointer; background:#0a120e; }
+  .project-item img, .project-item video{ width:100%; height:100%; object-fit:cover; border-radius:14px; display:block; }
+
+  /* Info overlay: title + date. Appears on hover (desktop) or tap (mobile) */
+  .work-overlay{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    padding:14px 16px;
+    background:linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0) 100%);
+    opacity:0;
+    transition:opacity .28s ease;
+    pointer-events:none;
+  }
+  .project-item:hover .work-overlay,
+  .project-item.info-active .work-overlay{
+    opacity:1;
+  }
+  .work-overlay .work-title{
+    font-size:13px; font-weight:bold; letter-spacing:.04em; text-transform:uppercase; color:#eafff3;
+  }
+  .work-overlay .work-date{
+    font-size:11px; letter-spacing:.06em; color:var(--green-soft); opacity:.85; margin-top:3px;
+  }
+
+  .work-expand{
+    position:absolute; top:10px; right:10px; z-index:3;
+    width:34px; height:34px; border-radius:50%;
+    background:rgba(2,10,6,0.65); border:1px solid var(--panel-line);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--green); opacity:0; transition:opacity .25s ease, border-color .2s, transform .2s;
+  }
+  .project-item:hover .work-expand,
+  .project-item.info-active .work-expand{
+    opacity:1;
+  }
+  .work-expand:hover{ border-color:var(--green); transform:scale(1.08); }
+  .work-expand svg{ width:16px; height:16px; }
+
+  .work-type-badge{
+    position:absolute; top:10px; left:10px; z-index:3;
+    font-size:9px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--green-soft);
+    background:rgba(2,10,6,0.65); border:1px solid var(--panel-line);
+    border-radius:20px; padding:4px 9px;
+    opacity:0; transition:opacity .25s ease;
+    display:flex; align-items:center; gap:6px;
+  }
+  .project-item:hover .work-type-badge,
+  .project-item.info-active .work-type-badge{
+    opacity:1;
+  }
+
+  /* ---- Lightbox for enlarging image / video / animation work ---- */
+  .lightbox{
+    position:fixed; inset:0; z-index:1000;
+    display:none; align-items:center; justify-content:center;
+    padding:28px;
+    background:rgba(2,6,4,0.94);
+    backdrop-filter:blur(4px);
+  }
+  .lightbox.active{ display:flex; }
+  .lightbox-inner{ position:relative; max-width:min(92vw, 1100px); max-height:88vh; display:flex; flex-direction:column; align-items:center; }
+  .lightbox-inner img, .lightbox-inner video{
+    max-width:min(92vw, 1100px); max-height:72vh; width:auto; height:auto;
+    border-radius:12px; box-shadow:0 0 60px rgba(57,255,143,0.12);
+    display:block;
+    touch-action: pan-y;
+  }
+  .lightbox-caption{ margin-top:18px; text-align:center; }
+  .lightbox-caption .work-title{ font-size:16px; font-weight:bold; letter-spacing:.05em; text-transform:uppercase; color:#eafff3; }
+  .lightbox-caption .work-date{ font-size:12px; letter-spacing:.06em; color:var(--green-soft); opacity:.85; margin-top:5px; }
+  .lightbox-close{
+    position:absolute; top:-46px; right:-6px;
+    width:38px; height:38px; border-radius:50%;
+    background:rgba(2,10,6,0.7); border:1px solid var(--panel-line);
+    color:#eafff3; font-size:20px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s, color .2s;
+  }
+  .lightbox-close:hover{ border-color:var(--green); color:var(--green); }
+
+  /* Gallery prev/next arrows + dot indicators (only rendered when a box has >1 file) */
+  .lightbox-arrow{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:44px; height:44px; border-radius:50%;
+    background:rgba(2,10,6,0.65); border:1px solid var(--panel-line);
+    color:#eafff3; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:border-color .2s, color .2s, background .2s;
+    z-index:2;
+  }
+  .lightbox-arrow:hover{ border-color:var(--green); color:var(--green); background:rgba(2,10,6,0.85); }
+  .lightbox-arrow.prev{ left:-16px; }
+  .lightbox-arrow.next{ right:-16px; }
+  .lightbox-arrow svg{ width:18px; height:18px; }
+
+  .lightbox-dots{ display:flex; gap:8px; margin-top:14px; }
+  .lightbox-dot{
+    width:7px; height:7px; border-radius:50%;
+    background:rgba(234,255,243,0.3); border:none; cursor:pointer;
+    transition:background .2s, transform .2s;
+  }
+  .lightbox-dot.active{ background:var(--green); transform:scale(1.25); }
+
+  @media (max-width:900px){
+    .lightbox-close{ top:-40px; right:0; }
+    .lightbox-arrow{ width:36px; height:36px; }
+    .lightbox-arrow.prev{ left:-6px; }
+    .lightbox-arrow.next{ right:-6px; }
+  }
 
   .project-placeholder{
     width:100%; height:100%;
@@ -275,9 +382,9 @@
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
-        <div class="project-item" data-filename="Brown Design 1.png"></div>
-        <div class="project-item" data-filename="Brown Design 2.png"></div>
-        <div class="project-item" data-filename="SCENE-DESIGN-3.png"></div>
+        <div class="project-item" data-filename="Brown Design 1.png" data-title="Brown Design 1" data-date="2026"></div>
+        <div class="project-item" data-filename="Brown Design 2.png" data-title="Brown Design 2" data-date="2026"></div>
+        <div class="project-item" data-filename="SCENE-DESIGN-3.png" data-title="Scene Design 3" data-date="2026"></div>
       </div>
     </div>
 
@@ -287,9 +394,9 @@
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
-        <div class="project-item" data-filename="LOGO-1.png"></div>
-        <div class="project-item" data-filename="LOGO-2.png"></div>
-        <div class="project-item" data-filename="LOGO-3.png"></div>
+        <div class="project-item" data-filename="LOGO-1.png" data-title="Logo 1" data-date="2026"></div>
+        <div class="project-item" data-filename="LOGO-2.png" data-title="Logo 2" data-date="2026"></div>
+        <div class="project-item" data-filename="LOGO-3.png" data-title="Logo 3" data-date="2026"></div>
       </div>
     </div>
 
@@ -299,9 +406,9 @@
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
-        <div class="project-item" data-filename="MOTION-1.png"></div>
-        <div class="project-item" data-filename="MOTION-2.png"></div>
-        <div class="project-item" data-filename="MOTION-3.png"></div>
+        <div class="project-item" data-filename="MOTION-1.png" data-title="Motion 1" data-date="2026"></div>
+        <div class="project-item" data-filename="MOTION-2.png" data-title="Motion 2" data-date="2026"></div>
+        <div class="project-item" data-filename="MOTION-3.png" data-title="Motion 3" data-date="2026"></div>
       </div>
     </div>
 
@@ -320,22 +427,144 @@
 
 </div>
 
+<!-- ================= LIGHTBOX ================= -->
+<div class="lightbox" id="workLightbox">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+    <div class="lightbox-media" id="lightboxMedia"></div>
+    <div class="lightbox-caption">
+      <div class="work-title" id="lightboxTitle"></div>
+      <div class="work-date" id="lightboxDate"></div>
+    </div>
+  </div>
+</div>
+
 <script>
+  var VIDEO_EXTENSIONS = ['mp4', 'webm', 'mov', 'm4v', 'ogv'];
+  var isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+  function getExt(filename){
+    return (filename.split('.').pop() || '').toLowerCase();
+  }
+  function isVideoFile(filename){
+    return VIDEO_EXTENSIONS.indexOf(getExt(filename)) !== -1;
+  }
+  var expandIconSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>';
+
   // ---- 1) Project work items: just drop a file named exactly like the
-  // data-filename into /assets and it will automatically appear. Until
-  // then, a placeholder shows which filename to add. ----
+  // data-filename into /assets and it will automatically appear (image,
+  // GIF/animation, or video). Until then, a placeholder shows which
+  // filename to add. Hovering (desktop) or tapping (mobile) reveals the
+  // title + date, and the work can be enlarged in a lightbox. ----
   document.querySelectorAll('.project-item[data-filename]').forEach(function(item){
     var filename = item.getAttribute('data-filename');
-    var img = new Image();
-    img.alt = filename;
-    img.onload = function(){
+    var title = item.getAttribute('data-title') || filename;
+    var date = item.getAttribute('data-date') || '';
+    var video = isVideoFile(filename);
+
+    function buildLoadedItem(){
       item.innerHTML = '';
-      item.appendChild(img);
-    };
-    img.onerror = function(){
-      item.innerHTML = '<div class="project-placeholder">+ Add ' + filename + '</div>';
-    };
-    img.src = 'assets/' + filename;
+
+      var media = document.createElement(video ? 'video' : 'img');
+      media.src = 'assets/' + filename;
+      media.alt = title;
+      if (video){
+        media.muted = true;
+        media.loop = true;
+        media.playsInline = true;
+        media.autoplay = true;
+      }
+      item.appendChild(media);
+
+      var badge = document.createElement('div');
+      badge.className = 'work-type-badge';
+      badge.textContent = video ? 'Video' : 'Image';
+      item.appendChild(badge);
+
+      var overlay = document.createElement('div');
+      overlay.className = 'work-overlay';
+      overlay.innerHTML = '<div class="work-title"></div>' + (date ? '<div class="work-date"></div>' : '');
+      overlay.querySelector('.work-title').textContent = title;
+      if (date) overlay.querySelector('.work-date').textContent = date;
+      item.appendChild(overlay);
+
+      var expand = document.createElement('button');
+      expand.className = 'work-expand';
+      expand.setAttribute('aria-label', 'Enlarge ' + title);
+      expand.innerHTML = expandIconSVG;
+      item.appendChild(expand);
+
+      expand.addEventListener('click', function(e){
+        e.stopPropagation();
+        openLightbox(filename, title, date, video);
+      });
+
+      item.addEventListener('click', function(){
+        if (isTouchDevice && !item.classList.contains('info-active')){
+          // First tap on mobile just reveals the title/date + expand icon
+          document.querySelectorAll('.project-item.info-active').forEach(function(other){
+            if (other !== item) other.classList.remove('info-active');
+          });
+          item.classList.add('info-active');
+          return;
+        }
+        // Desktop click, or a second tap on mobile, enlarges the work
+        openLightbox(filename, title, date, video);
+      });
+    }
+
+    var probe = new Image();
+    if (video){
+      // Videos can't be probed with Image(); check existence via HEAD-like fetch fallback to <video> load event
+      var testVideo = document.createElement('video');
+      testVideo.src = 'assets/' + filename;
+      testVideo.onloadeddata = buildLoadedItem;
+      testVideo.onerror = function(){
+        item.innerHTML = '<div class="project-placeholder">+ Add ' + filename + '</div>';
+      };
+    } else {
+      probe.onload = buildLoadedItem;
+      probe.onerror = function(){
+        item.innerHTML = '<div class="project-placeholder">+ Add ' + filename + '</div>';
+      };
+      probe.src = 'assets/' + filename;
+    }
+  });
+
+  // ---- Lightbox controls ----
+  var lightbox = document.getElementById('workLightbox');
+  var lightboxMedia = document.getElementById('lightboxMedia');
+  var lightboxTitle = document.getElementById('lightboxTitle');
+  var lightboxDate = document.getElementById('lightboxDate');
+  var lightboxClose = document.getElementById('lightboxClose');
+
+  function openLightbox(filename, title, date, isVideo){
+    lightboxMedia.innerHTML = '';
+    var media = document.createElement(isVideo ? 'video' : 'img');
+    media.src = 'assets/' + filename;
+    media.alt = title;
+    if (isVideo){
+      media.controls = true;
+      media.autoplay = true;
+      media.playsInline = true;
+    }
+    lightboxMedia.appendChild(media);
+    lightboxTitle.textContent = title;
+    lightboxDate.textContent = date;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+    lightboxMedia.innerHTML = ''; // stop any playing video
+  }
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', function(e){
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeLightbox();
   });
 
   // ---- 2) Name graphic shine effect ----
