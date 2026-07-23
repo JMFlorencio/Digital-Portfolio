@@ -9,6 +9,7 @@
     --bg-0:#050906;
     --panel-line: rgba(57,255,143,0.25);
     --green:#39ff8f;
+    --green-soft:#baffdb;
   }
   *{box-sizing:border-box;}
   html{ scroll-behavior:smooth; }
@@ -42,12 +43,93 @@
   .hero-content{ position:relative; z-index:2; padding:32px 48px 48px; display:flex; flex-direction:column; gap:72px; justify-content:flex-start; }
 
   nav.nav-links{ display:flex; justify-content:flex-end; align-items:center; gap:14px; }
-  nav.nav-links a img{ height:20px; width:auto; }
+  nav.nav-links a{
+    position:relative;
+    display:inline-block;
+    padding-bottom:8px;
+  }
+  nav.nav-links a img{
+    height:20px;
+    width:auto;
+    transition: transform .25s ease, filter .25s ease;
+  }
+  nav.nav-links a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:0;
+    width:0;
+    height:2px;
+    background: var(--green);
+    transition: width .3s ease, left .3s ease;
+  }
+  nav.nav-links a:hover img{
+    transform: translateY(-2px);
+  }
+  nav.nav-links a:hover::after{
+    width:100%;
+    left:0;
+  }
 
   .hero-mid{ display:flex; flex-direction:column; align-items:flex-end; gap:14px; }
 
-  .name-graphic{ align-self:flex-end; width:min(560px, 100%); margin-top:30px; opacity:0; animation: nameGraphicIn 0.9s ease-in 0.15s forwards; }
-  .name-graphic img{ width:100%; height:auto; }
+  .name-graphic{
+    position:relative;
+    align-self:flex-end;
+    width:min(560px, 100%);
+    margin-top:30px;
+    opacity:0;
+    animation: nameGraphicIn 0.9s ease-in 0.15s forwards;
+    cursor:pointer;
+  }
+  .name-graphic img{
+    position:relative;
+    z-index:1;
+    display:block;
+    width:100%;
+    height:auto;
+  }
+
+  /* Shine layer masked to the PNG's own alpha shape, so the highlight
+     only travels along the actual letterforms/stroke of JOEY FLORENCIO.png */
+  .name-glow{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+    -webkit-mask-image: url('assets/JOEY FLORENCIO.png');
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-image: url('assets/JOEY FLORENCIO.png');
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    background: linear-gradient(115deg,
+      transparent 35%,
+      rgba(255,255,255,0.85) 50%,
+      transparent 65%);
+    background-size: 260% 260%;
+    background-position: -80% -80%;
+    opacity:0;
+    transition: opacity .35s ease;
+  }
+  .name-graphic:hover .name-glow{
+    opacity:1;
+    animation: lightningSweep 1.6s ease-in-out infinite;
+  }
+
+  /* Tap/click-triggered shine for touch devices (plays once per tap) */
+  .name-graphic.shine-active .name-glow{
+    opacity:1;
+    animation: lightningSweep 1.6s ease-in-out 1;
+  }
+
+  @keyframes lightningSweep{
+    0%{ background-position: -80% -80%; }
+    50%{ background-position: 100% 100%; }
+    100%{ background-position: 180% 180%; }
+  }
 
   @keyframes nameGraphicIn{
     from{ opacity:0; transform:translateY(26px); }
@@ -61,7 +143,8 @@
 
   /* ---------------- SECTIONS ---------------- */
   section{ padding:80px 48px; }
-  .section-heading img{ height:34px; width:auto; }
+  .section-heading{ margin-bottom:48px; }
+  .section-heading img{ height:56px; width:auto; }
 
   .about-frames{
     display:flex;
@@ -73,14 +156,14 @@
   .frame-card img{ width:100%; height:auto; border-radius:14px; }
   .frame-card.f1{ align-self:flex-start; max-width:420px; }
 
-  .project-categories{ display:flex; flex-direction:column; gap:64px; padding:10px 48px 60px; }
+  .project-categories{ display:flex; flex-direction:column; gap:64px; padding:40px 48px 60px; }
 
   .category-header{ display:flex; align-items:center; gap:18px; margin-bottom:24px; }
   .category-header img{ height:28px; width:auto; }
   .cat-line{ flex:1; height:1px; background:var(--panel-line); }
 
   .project-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; }
-  .project-item{ aspect-ratio:4/3; border-radius:14px; overflow:hidden; }
+  .project-item{ aspect-ratio:16/9; border-radius:14px; overflow:hidden; }
   .project-item img{ width:100%; height:100%; object-fit:cover; border-radius:14px; }
 
   .project-placeholder{
@@ -103,25 +186,28 @@
   footer{ padding:30px 48px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#4a6a5a; border-top:1px solid var(--panel-line); }
 
   @media (max-width: 900px){
-    .hero{ display:flex; flex-direction:column; min-height:auto; }
-    .hero-head{ order:2; width:55%; margin:14px auto 0; }
-    .hero-head img{ width:100%; }
-    .hero-content{ order:1; padding:22px 20px 24px; justify-content:flex-start; }
+    /* Keep the same two-column grid layout as desktop for the header;
+       only scale sizes/spacing down so HEAD.png stays in place correctly. */
+    .hero{ min-height:380px; grid-template-columns:0.9fr 1.1fr; }
+    .hero-head{ align-items:flex-end; }
+    .hero-content{ padding:16px 16px 20px; gap:36px; }
 
-    nav.nav-links{ justify-content:center; flex-wrap:wrap; gap:16px; }
-    nav.nav-links a img{ height:18px; }
+    nav.nav-links{ gap:8px; }
+    nav.nav-links a img{ height:13px; }
 
-    .hero-mid{ align-items:center; margin-top:22px; gap:12px; }
-    .name-graphic{ align-self:center; width:min(420px, 90%); }
-    .hero-cta{ align-self:center; margin-top:18px; }
-    .btn-watch img{ height:52px; }
+    .hero-mid{ gap:8px; }
+    .name-graphic{ width:min(260px, 100%); margin-top:12px; }
+    .hero-cta{ margin-top:12px; }
+    .btn-watch img{ height:34px; }
 
     section{ padding:50px 20px; }
+    .section-heading{ margin-bottom:28px; }
+    .section-heading img{ height:38px; }
     .about-frames{ flex-direction:column; align-items:center; padding:50px 20px 70px; gap:24px; }
     .frame-card, .frame-card.f1{ width:80%; align-self:center; }
     .section-gap{ height:70px; }
 
-    .project-categories{ padding:10px 20px 40px; gap:44px; }
+    .project-categories{ padding:28px 20px 40px; gap:44px; }
     .category-header img{ height:20px; }
     .project-grid{ grid-template-columns:1fr; gap:16px; }
   }
@@ -149,6 +235,7 @@
       <div class="hero-mid">
         <div class="name-graphic">
           <img src="assets/JOEY FLORENCIO.png" alt="Joey Florencio">
+          <div class="name-glow" aria-hidden="true"></div>
         </div>
         <div class="hero-cta">
           <a href="#" class="btn-watch"><img src="assets/WATCH DEMO.png" alt="Watch Demo"></a>
@@ -188,9 +275,9 @@
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
-        <div class="project-item"><div class="project-placeholder">+ Add Scene Design Work</div></div>
-        <div class="project-item"><div class="project-placeholder">+ Add Scene Design Work</div></div>
-        <div class="project-item"><div class="project-placeholder">+ Add Scene Design Work</div></div>
+        <div class="project-item" data-filename="SCENE-DESIGN-1.png"></div>
+        <div class="project-item" data-filename="SCENE-DESIGN-2.png"></div>
+        <div class="project-item" data-filename="SCENE-DESIGN-3.png"></div>
       </div>
     </div>
 
@@ -200,9 +287,9 @@
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
-        <div class="project-item"><div class="project-placeholder">+ Add Logo Illustration</div></div>
-        <div class="project-item"><div class="project-placeholder">+ Add Logo Illustration</div></div>
-        <div class="project-item"><div class="project-placeholder">+ Add Logo Illustration</div></div>
+        <div class="project-item" data-filename="LOGO-1.png"></div>
+        <div class="project-item" data-filename="LOGO-2.png"></div>
+        <div class="project-item" data-filename="LOGO-3.png"></div>
       </div>
     </div>
 
@@ -212,9 +299,9 @@
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
-        <div class="project-item"><div class="project-placeholder">+ Add Motion Graphics Work</div></div>
-        <div class="project-item"><div class="project-placeholder">+ Add Motion Graphics Work</div></div>
-        <div class="project-item"><div class="project-placeholder">+ Add Motion Graphics Work</div></div>
+        <div class="project-item" data-filename="MOTION-1.png"></div>
+        <div class="project-item" data-filename="MOTION-2.png"></div>
+        <div class="project-item" data-filename="MOTION-3.png"></div>
       </div>
     </div>
 
@@ -232,6 +319,62 @@
   <footer>© 2026 Joey Florencio</footer>
 
 </div>
+
+<script>
+  // ---- 1) Project work items: just drop a file named exactly like the
+  // data-filename into /assets and it will automatically appear. Until
+  // then, a placeholder shows which filename to add. ----
+  document.querySelectorAll('.project-item[data-filename]').forEach(function(item){
+    var filename = item.getAttribute('data-filename');
+    var img = new Image();
+    img.alt = filename;
+    img.onload = function(){
+      item.innerHTML = '';
+      item.appendChild(img);
+    };
+    img.onerror = function(){
+      item.innerHTML = '<div class="project-placeholder">+ Add ' + filename + '</div>';
+    };
+    img.src = 'assets/' + filename;
+  });
+
+  // ---- 2) Name graphic shine effect ----
+  var nameGraphic = document.querySelector('.name-graphic');
+  var nameImg = document.querySelector('.name-graphic img');
+  var nameGlow = document.querySelector('.name-glow');
+
+  // Keep the glow mask perfectly matched to whatever image is actually
+  // loaded in the name graphic, so the shine always traces the real letters.
+  if (nameImg && nameGlow) {
+    var syncMask = function(){
+      var src = nameImg.currentSrc || nameImg.src;
+      nameGlow.style.webkitMaskImage = "url('" + src + "')";
+      nameGlow.style.maskImage = "url('" + src + "')";
+    };
+    if (nameImg.complete && nameImg.naturalWidth) {
+      syncMask();
+    } else {
+      nameImg.addEventListener('load', syncMask);
+    }
+  }
+
+  // Desktop already gets the shine on hover (see CSS). On touch devices
+  // there's no hover, so tapping the name plays the shine once.
+  if (nameGraphic) {
+    var shinePlaying = false;
+    var playShineOnce = function(){
+      if (shinePlaying) return;
+      shinePlaying = true;
+      nameGraphic.classList.add('shine-active');
+      setTimeout(function(){
+        nameGraphic.classList.remove('shine-active');
+        shinePlaying = false;
+      }, 1600); // matches the 1.6s lightningSweep animation
+    };
+    nameGraphic.addEventListener('touchstart', playShineOnce, { passive: true });
+    nameGraphic.addEventListener('click', playShineOnce);
+  }
+</script>
 
 </body>
 </html>
