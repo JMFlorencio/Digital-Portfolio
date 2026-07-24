@@ -153,9 +153,53 @@
   }
 
   .hero-cta{ margin-top:22px; }
-  .btn-watch{ display:inline-block; transition:transform .2s, filter .2s; }
+  .btn-watch{
+    display:inline-block;
+    background:none; border:none; padding:0; margin:0;
+    cursor:pointer;
+    transition:transform .2s, filter .2s;
+  }
   .btn-watch:hover{ transform:translateY(-2px); filter:brightness(1.15); }
   .btn-watch img{ height:64px; width:auto; }
+
+  /* ---------------- VIDEO MODAL ---------------- */
+  .video-modal{
+    position:fixed; inset:0; z-index:10000;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    background:rgba(2,6,4,0.88);
+    opacity:0; visibility:hidden;
+    transition:opacity .25s ease, visibility .25s ease;
+  }
+  .video-modal.is-open{ opacity:1; visibility:visible; }
+  .video-modal-box{
+    position:relative;
+    width:100%; max-width:960px;
+    background:#000;
+    border:1.5px solid rgba(57,255,143,0.5);
+    border-radius:16px;
+    box-shadow:0 0 40px rgba(57,255,143,0.12);
+    overflow:hidden;
+    transform:scale(.96);
+    transition:transform .25s ease;
+  }
+  .video-modal.is-open .video-modal-box{ transform:scale(1); }
+  .video-modal video{ display:block; width:100%; height:auto; max-height:80vh; background:#000; }
+  .video-modal-close{
+    position:absolute; top:-44px; right:0;
+    width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(2,10,6,0.6);
+    border:1px solid var(--panel-line);
+    border-radius:50%;
+    color:#eafff3; font-size:18px; line-height:1;
+    cursor:pointer;
+    transition:border-color .2s, background .2s;
+  }
+  .video-modal-close:hover{ border-color:var(--green); background:rgba(2,10,6,0.9); }
+  @media (max-width:600px){
+    .video-modal-close{ top:-40px; width:30px; height:30px; font-size:16px; }
+  }
 
   /* Contact / social icon row (Facebook, Behance, Email, Mobile) */
   .hero-social{ display:flex; align-items:center; justify-content:flex-end; gap:20px; margin-top:20px; }
@@ -617,7 +661,7 @@
             <div class="name-glow" aria-hidden="true"></div>
           </div>
           <div class="hero-cta">
-            <a href="https://drive.google.com/drive/folders/1cANndoFocRufeNk2SQf1Ud9-DRkoh5To?usp=sharing" class="btn-watch"><img src="assets/WATCH DEMO.png" alt="Watch Demo"></a>
+            <button type="button" class="btn-watch" id="watchDemoBtn"><img src="assets/WATCH DEMO.png" alt="Watch Demo"></button>
           </div>
 
           <!-- ============ CONTACT / SOCIAL ICONS ============
@@ -1043,6 +1087,48 @@
     scaleHero();
     window.addEventListener('resize', scaleHero);
     window.addEventListener('orientationchange', scaleHero);
+  })();
+</script>
+
+<!-- ================= WATCH DEMO VIDEO MODAL =================
+     Put your demo reel file in the assets folder and update the
+     <source src="..."> below to match its filename. -->
+<div class="video-modal" id="videoModal">
+  <div class="video-modal-box">
+    <button type="button" class="video-modal-close" id="videoModalClose" aria-label="Close video">&times;</button>
+    <video id="demoVideo" controls playsinline>
+      <source src="assets/Florencio-BMMA-Demo-Reel-2026.mp4" type="video/mp4">
+      Your browser doesn't support embedded video.
+    </video>
+  </div>
+</div>
+<script>
+  (function(){
+    var openBtn = document.getElementById('watchDemoBtn');
+    var modal = document.getElementById('videoModal');
+    var closeBtn = document.getElementById('videoModalClose');
+    var video = document.getElementById('demoVideo');
+
+    function openModal(){
+      modal.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      video.play().catch(function(){ /* autoplay may be blocked, controls still work */ });
+    }
+    function closeModal(){
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+      video.pause();
+      video.currentTime = 0;
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e){
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+    });
   })();
 </script>
 
