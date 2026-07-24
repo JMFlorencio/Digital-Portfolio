@@ -274,7 +274,63 @@
     padding:4px 12px;
   }
 
+  /* ---------------- CONTACT ---------------- */
+  .contact-card{
+    max-width:640px;
+    margin:0 auto;
+    text-align:center;
+    border-radius:22px;
+    border:1.5px solid rgba(57,255,143,0.5);
+    background:radial-gradient(120% 140% at 50% -10%, rgba(13,46,29,0.5) 0%, rgba(2,8,5,0.72) 65%);
+    box-shadow:0 0 26px rgba(57,255,143,0.07);
+    padding:40px 36px;
+  }
+  .contact-blurb{
+    font-size:.92rem;
+    line-height:1.7;
+    color:rgba(234,255,243,0.82);
+    margin:0 0 30px;
+  }
+  .contact-details{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:16px;
+    margin-bottom:8px;
+  }
+  .contact-detail-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    min-width:180px;
+    padding:14px 26px;
+    border:1px solid var(--panel-line);
+    border-radius:14px;
+    background:rgba(2,10,6,0.55);
+    transition:border-color .2s, background .2s, transform .2s;
+  }
+  .contact-detail-item:hover{
+    border-color:var(--green);
+    background:rgba(2,10,6,0.8);
+    transform:translateY(-2px);
+  }
+  .contact-detail-label{
+    font-size:.68rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--green-soft);
+  }
+  .contact-detail-value{
+    font-size:.85rem;
+    color:#eafff3;
+  }
+  .contact-social{ justify-content:center; margin-top:28px; }
+
   @media (max-width:900px){
+    .contact-card{ padding:28px 22px; }
+    .contact-blurb{ font-size:.85rem; margin-bottom:22px; }
+    .contact-detail-item{ min-width:150px; padding:12px 18px; }
     .frame-card{ padding:24px 22px; }
     .frame-title{ font-size:1rem; margin-bottom:14px; }
     .about-bio{ font-size:.85rem; }
@@ -459,9 +515,83 @@
     .category-header img{ height:20px; }
     .project-grid{ grid-template-columns:1fr; gap:16px; }
   }
+
+  /* ---------------- PRELOADER ---------------- */
+  .preloader{
+    position:fixed; inset:0; z-index:9999;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bg-0);
+    transition:opacity .5s ease, visibility .5s ease;
+  }
+  .preloader.is-hidden{ opacity:0; visibility:hidden; pointer-events:none; }
+
+  /* Square wrapper: the line loader rotates inside it while the
+     clipped logo stays fixed and centered, unaffected by the spin. */
+  .preloader-spinner-wrap{
+    position:relative;
+    width:150px; height:150px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .preloader-spinner-icon{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    animation:preloaderSpin 1s linear infinite;
+  }
+
+  /* HEAD.png is masked into a perfect circle so its rough/uneven
+     edges never show -- only a clean circular crop is visible,
+     sitting in the center of the loader ring. No shadow/glow. */
+  .preloader-logo-clip{
+    position:relative;
+    width:64%; height:64%;
+    border-radius:50%;
+    overflow:hidden;
+  }
+  .preloader-logo-clip img{
+    width:100%; height:100%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+  }
+
+  @keyframes preloaderSpin{ to{ transform:rotate(360deg); } }
+  @media (max-width:600px){
+    .preloader-spinner-wrap{ width:110px; height:110px; }
+  }
 </style>
 </head>
 <body>
+
+<!-- ================= PRELOADER ================= -->
+<div class="preloader" id="preloader">
+  <div class="preloader-spinner-wrap">
+    <svg class="preloader-spinner-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-dasharray="16 47"></circle>
+    </svg>
+    <div class="preloader-logo-clip">
+      <img src="assets/HEAD.png" alt="Joey Florencio">
+    </div>
+  </div>
+</div>
+<script>
+  (function(){
+    var preloader = document.getElementById('preloader');
+    var minTime = 1000; // keeps the loader visible briefly even on fast loads
+    var start = Date.now();
+    function hidePreloader(){
+      var wait = Math.max(0, minTime - (Date.now() - start));
+      setTimeout(function(){
+        preloader.classList.add('is-hidden');
+        setTimeout(function(){ preloader.style.display = 'none'; }, 500);
+      }, wait);
+    }
+    if (document.readyState === 'complete') {
+      hidePreloader();
+    } else {
+      window.addEventListener('load', hidePreloader);
+    }
+  })();
+</script>
 
 <div class="site">
 
@@ -487,7 +617,7 @@
             <div class="name-glow" aria-hidden="true"></div>
           </div>
           <div class="hero-cta">
-            <a href="#" class="btn-watch"><img src="assets/WATCH DEMO.png" alt="Watch Demo"></a>
+            <a href="https://drive.google.com/drive/folders/1cANndoFocRufeNk2SQf1Ud9-DRkoh5To?usp=sharing" class="btn-watch"><img src="assets/WATCH DEMO.png" alt="Watch Demo"></a>
           </div>
 
           <!-- ============ CONTACT / SOCIAL ICONS ============
@@ -647,6 +777,40 @@
   <section id="contact" style="padding-bottom:0;">
     <div class="section-heading">
       <img src="assets/CONTACT US SECTION.png" alt="Contact Us">
+    </div>
+
+    <div class="contact-card">
+      <p class="contact-blurb">
+        Got a project in mind or just want to say hi? I'm always open to
+        new collaborations, freelance work, and creative ideas -- reach
+        out through any of the channels below and let's talk.
+      </p>
+
+      <div class="contact-details">
+        <a href="mailto:joeyflorencio1798@gmail.com" class="contact-detail-item">
+          <span class="contact-detail-label">Email</span>
+          <span class="contact-detail-value">joeyflorencio1798@gmail.com</span>
+        </a>
+        <a href="tel:+639274154081" class="contact-detail-item">
+          <span class="contact-detail-label">Mobile</span>
+          <span class="contact-detail-value">+63 927 415 4081</span>
+        </a>
+      </div>
+
+      <div class="hero-social contact-social">
+        <a href="https://www.facebook.com/ArfixPH2022" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
+          <img src="assets/facebook.png" alt="Facebook">
+        </a>
+        <a href="https://www.behance.net/joeyflorencio98" target="_blank" rel="noopener" class="social-link" aria-label="Behance">
+          <img src="assets/Behance.png" alt="Behance">
+        </a>
+        <a href="mailto:joeyflorencio1798@gmail.com" class="social-link" aria-label="Email">
+          <img src="assets/mail.png" alt="Email">
+        </a>
+        <a href="tel:+639274154081" class="social-link" aria-label="Call">
+          <img src="assets/device.png" alt="Mobile">
+        </a>
+      </div>
     </div>
   </section>
   <div class="section-gap"></div>
