@@ -535,6 +535,7 @@
   .social-link{ display:inline-flex; align-items:center; justify-content:center; transition:transform .2s ease, filter .2s ease; }
   .social-link:hover{ transform:translateY(-3px); filter:brightness(1.2); }
   .social-link img{ height:32px; width:auto; display:block; }
+  .social-link svg{ height:32px; width:32px; display:block; }
 
   /* ---------------- SECTIONS ---------------- */
   section{ padding:80px 48px; }
@@ -1107,10 +1108,10 @@
 
                - Facebook: replace the href with your Facebook profile URL
                - Behance:  replace the href with your Behance profile URL
-               - LinkedIn: replace the href with your LinkedIn profile URL,
-                           and drop a "LinkedIn.png" icon (same style/size
-                           as facebook.png / Behance.png) into /assets --
-                           it'll show a broken-image placeholder until then.
+               - LinkedIn: links to your LinkedIn profile. The icon is drawn
+                           as inline SVG (not an image file) so it always
+                           matches size/color with no asset to upload --
+                           see the note in chat for why.
           ================================================== -->
           <div class="hero-social">
             <a href="https://www.facebook.com/ArfixPH2022" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
@@ -1119,8 +1120,8 @@
             <a href="https://www.behance.net/joeyflorencio98" target="_blank" rel="noopener" class="social-link" aria-label="Behance">
               <img src="assets/Behance.png" alt="Behance">
             </a>
-            <a href="https://www.linkedin.com/in/joeyflorencio" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
-              <img src="assets/LinkedIn.png" alt="LinkedIn">
+            <a href="https://www.linkedin.com/in/joey-florencio-a265b7212" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="color:#eafff3"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
             </a>
           </div>
         </div>
