@@ -80,7 +80,34 @@
     .hero-head img{ animation:none; opacity:1; transform:none; }
   }
 
-  .hero-content{ position:relative; z-index:2; width:100%; padding:110px 48px 48px; display:flex; flex-direction:column; justify-content:flex-start; }
+  .hero-content{
+    position:relative; z-index:2; width:100%;
+    display:flex; flex-direction:column; justify-content:flex-start;
+    /* Base spacing (used by mobile, since mobile just scales this whole
+       hero down as one unit -- see .hero-frame + scaleHero script). */
+    padding: 190px 48px 48px;
+  }
+
+  /* ---- DESKTOP / WEB-VIEW-ONLY SPACING FOR "JOEY FLORENCIO.png" ----
+     Only applies above 900px wide (real browser view, not the scaled-down
+     mobile copy), so tweaking these numbers won't touch the phone layout
+     at all. The name graphic is right-aligned via .hero-mid, so:
+       padding-top    = gap from the very top of the hero down to the name
+                         (raise this to bring it DOWN, closer to the head)
+       padding-right  = gap from the right edge of the hero
+                         (lower this to bring it LEFT, closer to the head)
+       padding-left   = only affects where content could start on the left
+                         (rarely matters here since the block hugs the right)
+       padding-bottom = space below the name/button/social icons
+     Change one value at a time and refresh to see the effect. */
+  @media (min-width:901px){
+    .hero-content{
+      padding-top: 190px;
+      padding-right: 48px;
+      padding-left: 48px;
+      padding-bottom: 48px;
+    }
+  }
 
   /* ================= NAVBAR (fixed, sits above everything) =================
      Pill nav on desktop, hamburger + slide-in drawer on mobile. Lives
@@ -318,7 +345,9 @@
     text-align:center;
     display:flex; flex-direction:column; align-items:center; gap:16px;
     transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+    cursor:pointer;
   }
+  .service-card:focus-visible{ outline:2px solid var(--green); outline-offset:3px; }
   .service-card:hover{
     border-color:var(--green);
     transform:translateY(-5px);
@@ -711,13 +740,70 @@
   .category-header img{ height:28px; width:auto; }
   .cat-line{ flex:1; height:1px; background:var(--panel-line); }
 
-  .project-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; }
+  /* ---- "OTHERS" COLLAPSIBLE TOGGLE ----
+     Others is collapsed by default -- its content only shows once the
+     person clicks/taps this header. The little square icon rotates
+     into an "open" state (+ becomes x) when expanded. */
+  .others-toggle{
+    all:unset;
+    display:flex; align-items:center; gap:18px; margin-bottom:24px;
+    width:100%; cursor:pointer; box-sizing:border-box;
+  }
+  .others-toggle-icon{
+    flex:none; width:28px; height:28px;
+    border:1.5px solid var(--green); border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--green);
+    transition:background .2s ease;
+  }
+  .others-toggle:hover .others-toggle-icon{ background:rgba(57,255,143,0.14); }
+  .others-toggle-icon svg{
+    width:14px; height:14px;
+    transition:transform .3s ease;
+  }
+  .others-toggle[aria-expanded="true"] .others-toggle-icon svg{ transform:rotate(45deg); }
+  .others-toggle:focus-visible .others-toggle-icon{ outline:2px solid var(--green); outline-offset:2px; }
+
+  .others-content{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .4s ease;
+  }
+  .others-content-inner{ overflow:hidden; min-height:0; }
+  .project-category[data-category="others"].is-open .others-content{
+    grid-template-rows:1fr;
+  }
+
+  .project-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; align-items:start; }
   .project-item{ position:relative; aspect-ratio:16/9; border-radius:14px; overflow:hidden; cursor:pointer; background:#0a120e; }
   .project-item img, .project-item video{ width:100%; height:100%; object-fit:cover; border-radius:14px; display:block; }
 
+  /* ---- POSTER FRAMES ----
+     Posters are tall/portrait, not widescreen, so the default 16:9
+     frame above was cropping them badly. This gives poster items a
+     portrait frame instead and shows the full artwork (no cropping).
+     Adjust the aspect-ratio below if your posters are a different
+     proportion (e.g. 2/3 for a taller poster, 1/1 for a square one). */
+  .project-item[data-subcategory="poster"]{ aspect-ratio:3/4; }
+  .project-item[data-subcategory="poster"] img,
+  .project-item[data-subcategory="poster"] video{ object-fit:contain; position:relative; z-index:1; }
+
+  /* ---- POSTER BACKDROP (Instagram / FB Stories style) ----
+     Fills the empty space left/right of a "contain"-fit poster with a
+     blurred, darkened copy of the same image, so it looks like the
+     poster's own colors are casting onto the background instead of
+     plain empty bars. Pure CSS, generated per-item in the JS below. */
+  .poster-backdrop{
+    position:absolute; inset:-20px; z-index:0;
+    background-size:cover; background-position:center;
+    filter:blur(28px) saturate(1.4) brightness(0.55);
+    transform:scale(1.15);
+    pointer-events:none;
+  }
+
   /* Info overlay: title + date. Appears on hover (desktop) or tap (mobile) */
   .work-overlay{
-    position:absolute; inset:0;
+    position:absolute; inset:0; z-index:2;
     display:flex; flex-direction:column; justify-content:flex-end;
     padding:14px 16px;
     background:linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0) 100%);
@@ -783,6 +869,13 @@
   .lightbox-caption{ margin-top:18px; text-align:center; }
   .lightbox-caption .work-title{ font-size:16px; font-weight:bold; letter-spacing:.05em; text-transform:uppercase; color:#eafff3; }
   .lightbox-caption .work-date{ font-size:12px; letter-spacing:.06em; color:var(--green-soft); opacity:.85; margin-top:5px; }
+  .lightbox-description{
+    max-width:560px;
+    margin:14px auto 0;
+    font-size:13.5px;
+    line-height:1.7;
+    color:rgba(234,255,243,0.78);
+  }
   .lightbox-close{
     position:absolute; top:-46px; right:-6px;
     width:38px; height:38px; border-radius:50%;
@@ -837,7 +930,29 @@
   }
   .project-placeholder:hover{ border-color:var(--green); color:var(--green); }
 
-  .section-gap{ height:140px; }
+  /* ---- SECTION DIVIDER ----
+     Was just an empty spacer; now doubles as a subtle fading line so
+     each major block (Hero / About / Services / Projects / Contact)
+     reads as its own division instead of running into the next. */
+  .section-gap{
+    height:140px;
+    display:flex; align-items:center; justify-content:center;
+    max-width:1100px; margin:0 auto; padding:0 48px;
+  }
+  .section-gap::before{
+    content:"";
+    width:100%; height:1px;
+    background:linear-gradient(to right,
+      transparent 0%,
+      var(--panel-line) 15%,
+      var(--green) 50%,
+      var(--panel-line) 85%,
+      transparent 100%);
+    opacity:0.8;
+  }
+  @media (max-width:900px){
+    .section-gap{ padding:0 20px; }
+  }
 
   footer{ padding:30px 48px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#4a6a5a; border-top:1px solid var(--panel-line); }
 
@@ -985,16 +1100,17 @@
             <button type="button" class="btn-watch" id="watchDemoBtn"><img src="assets/WATCH DEMO.png" alt="Watch Demo"></button>
           </div>
 
-          <!-- ============ CONTACT / SOCIAL ICONS ============
-               Edit your info below, then just tell me your icon file
-               names and I'll drop them into the img src attributes.
+          <!-- ============ CONTACT / SOCIAL ICONS (HERO BANNER ONLY) ============
+               Email + phone were removed here since they're already covered
+               in the Contact section further down -- this row is just
+               Facebook, Behance, LinkedIn.
 
                - Facebook: replace the href with your Facebook profile URL
                - Behance:  replace the href with your Behance profile URL
-               - Email:    replace "youremail@example.com" with your email
-               - Mobile:   replace "+639000000000" with your number
-                           (include the country code, e.g. +63 for PH,
-                           so it dials correctly from any phone)
+               - LinkedIn: replace the href with your LinkedIn profile URL,
+                           and drop a "LinkedIn.png" icon (same style/size
+                           as facebook.png / Behance.png) into /assets --
+                           it'll show a broken-image placeholder until then.
           ================================================== -->
           <div class="hero-social">
             <a href="https://www.facebook.com/ArfixPH2022" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
@@ -1003,17 +1119,16 @@
             <a href="https://www.behance.net/joeyflorencio98" target="_blank" rel="noopener" class="social-link" aria-label="Behance">
               <img src="assets/Behance.png" alt="Behance">
             </a>
-            <a href="mailto:joeyflorencio1798@gmail.com" class="social-link" aria-label="Email">
-              <img src="assets/mail.png" alt="Email">
-            </a>
-            <a href="tel:+639274154081" class="social-link" aria-label="Call">
-              <img src="assets/device.png" alt="Mobile">
+            <a href="https://www.linkedin.com/in/joeyflorencio" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
+              <img src="assets/LinkedIn.png" alt="LinkedIn">
             </a>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="section-gap"></div>
 
   <!-- ================= ABOUT ================= -->
   <section id="about" style="padding-bottom:0;">
@@ -1080,6 +1195,8 @@
     </div>
   </div>
 
+  <div class="section-gap"></div>
+
   <!-- ================= SERVICES ================= -->
   <section id="services" style="padding-bottom:0;">
     <div class="section-heading">
@@ -1087,32 +1204,39 @@
     </div>
     <div class="services-intro">
       <p>
-        Greetings! I am Joey Florencio, a passionate and innovative multimedia artist
-        dedicated to crafting immersive digital experiences.
+        Illustration, motion graphics, and product showcase animation — three
+        crafts, one goal: turning ideas into visuals that are ready to move,
+        ship, and stand out.
       </p>
       <p>
-        From high-fidelity UI/UX layouts to dynamic 3D and motion animations, I bridge
-        creative vision with functional design.
+        From clean vector illustrations and logo designs to animated brand
+        identities and polished product showcase videos, every piece is built
+        with the same attention to detail, from first sketch to final frame.
       </p>
       <a href="#projects" class="services-read-more">Read More</a>
     </div>
   </section>
 
   <div class="services-wrap">
+    <!-- ============ SERVICE CARDS -> PROJECT CATEGORY LINKS ============
+         data-project-filter matches a data-filter value from the
+         #projectFilters buttons above (see PROJECTS section). Clicking a
+         card scrolls to Projects and switches the filter to that category.
+         Change the value below any time to point a card somewhere else. -->
     <div class="services-grid">
-      <div class="service-card">
+      <div class="service-card" data-project-filter="all" tabindex="0" role="button" aria-label="View UI and UX projects">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div>
-        <span class="service-name">UI and UX</span>
+        <span class="service-name">ILLUSTRATIONS</span>
       </div>
-      <div class="service-card">
+      <div class="service-card" data-project-filter="others" tabindex="0" role="button" aria-label="View Graphics and Layout projects">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l5-5 4 4 5-6 4 5"/></svg></div>
         <span class="service-name">Graphics and Layout</span>
       </div>
-      <div class="service-card">
+      <div class="service-card" data-project-filter="motion-graphics" tabindex="0" role="button" aria-label="View 3D Animation projects">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></div>
-        <span class="service-name">3D Animation</span>
+        <span class="service-name">3D Product Animation</span>
       </div>
-      <div class="service-card">
+      <div class="service-card" data-project-filter="motion-graphics" tabindex="0" role="button" aria-label="View Motion Graphics projects">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg></div>
         <span class="service-name">Motion Graphics</span>
       </div>
@@ -1120,7 +1244,12 @@
   </div>
   <div class="section-gap"></div>
 
-  <!-- ================= PROJECTS ================= -->
+  <!-- ================= PROJECTS =================
+       Draft note: every project-item below now has a data-description
+       attribute (a placeholder write-up) that appears in the lightbox
+       when a visitor clicks to enlarge the piece. These are drafts, not
+       final -- just tell me which ones to rewrite and how, or edit the
+       text directly inside the quotes of each data-description="..." . -->
   <section id="projects" style="padding-bottom:0;">
     <div class="section-heading">
       <img src="assets/PROJECTS SECTION.png" alt="Projects">
@@ -1143,10 +1272,10 @@
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
-        <div class="project-item" data-filename="Brown Design 2.png" data-title="Flat Scene Design Illustration" data-date="2026"></div>
-        <div class="project-item" data-filename="The Lady On the Mountain.png" data-title="Flat Scene Design Illustration II" data-date="2026"></div>
-        <div class="project-item" data-filename="Cherry Blossom.png" data-title="Sakura + Beach" data-date="2026"></div>
-        <div class="project-item" data-filename="Sunset.png" data-title="My Imaginary place" data-date="2023"></div>
+        <div class="project-item" data-filename="Brown Design 2.png" data-title="Flat Scene Design Illustration" data-date="2026" data-description="A flat-style vector scene built around warm, earthy tones -- a study in composing depth and mood using shape and color rather than fine detail."></div>
+        <div class="project-item" data-filename="The Lady On the Mountain.png" data-title="Flat Scene Design Illustration II" data-date="2026" data-description="A follow-up flat illustration exploring a quiet mountain scene, focused on layered silhouettes and a calm, atmospheric color palette."></div>
+        <div class="project-item" data-filename="Cherry Blossom.png" data-title="Sakura + Beach" data-date="2026" data-description="Two contrasting environments -- soft sakura blooms and an open beach -- blended into one flat-vector scene to explore color harmony across different settings."></div>
+        <div class="project-item" data-filename="Sunset.png" data-title="My Imaginary place" data-date="2023" data-description="A personal illustration imagining a peaceful place at sunset, built early on to practice lighting and gradients within a flat design style."></div>
       </div>
     </div>
 
@@ -1156,9 +1285,9 @@
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
-        <div class="project-item" data-filename="LOGO ENTRY_UC-80TH_LOGO_V1.png" data-title="UC 80th Anniversary Logo Entry" data-date="2026"></div>
-        <div class="project-item" data-filename="INTRAMURALS LOGO.png" data-title="Intramurals 2025" data-date="2025"></div>
-        <div class="project-item" data-filename="12.jpg" data-title="UC-INTTO" data-date="2024"></div>
+        <div class="project-item" data-filename="LOGO ENTRY_UC-80TH_LOGO_V1.png" data-title="UC 80th Anniversary Logo Entry" data-date="2026" data-description="A commemorative logo entry designed for the University of the Cordilleras' 80th anniversary, balancing tradition and modern vector craftsmanship."></div>
+        <div class="project-item" data-filename="INTRAMURALS LOGO.png" data-title="Intramurals 2025" data-date="2025" data-description="An energetic logo built for the 2025 Intramurals, designed to work across banners, jerseys, and event materials."></div>
+        <div class="project-item" data-filename="12.jpg" data-title="UC-INTTO" data-date="2024" data-description="A logo identity piece created for UC-INTTO, focused on clean lines and strong readability at both large and small sizes."></div>
       </div>
     </div>
 
@@ -1168,34 +1297,43 @@
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
-        <div class="project-item" data-filename="Ocushield logo Animation.mp4" data-title="Ocushield Logo Animation" data-date="2026"></div>
-        <div class="project-item" data-filename="Florencio_JM_EXR-FN-03_vFinalRender.mp4" data-title="Product Animation" data-date="2026"></div>
-        <div class="project-item" data-filename="Arfix_Digital_Solution_Logo_Animation.mp4" data-title="Arfix Digital" data-date="2026"></div>
-        <div class="project-item" data-filename="Aladdin.mp4" data-title="Alladin Album Cover" data-date="2026"></div>
-        <div class="project-item" data-filename="Stay_Daryl_Ong.mp4" data-title="Stay Animation Music Video" data-date="2026"></div>
+        <div class="project-item" data-filename="Ocushield logo Animation.mp4" data-title="Ocushield Logo Animation" data-date="2026" data-description="A short logo reveal animation for Ocushield, designed to introduce the brand with a clean, confident motion sequence."></div>
+        <div class="project-item" data-filename="Florencio_JM_EXR-FN-03_vFinalRender.mp4" data-title="Product Animation" data-date="2026" data-description="A product showcase animation focused on highlighting form and detail through smooth camera movement and lighting."></div>
+        <div class="project-item" data-filename="Arfix_Digital_Solution_Logo_Animation.mp4" data-title="Arfix Digital" data-date="2026" data-description="A logo animation created for Arfix Digital Solutions, built to feel sharp and modern for use across their digital platforms."></div>
+        <div class="project-item" data-filename="Aladdin.mp4" data-title="Alladin Album Cover" data-date="2026" data-description="A motion piece built around an Aladdin-inspired album cover, bringing a static illustration to life with subtle animated detail."></div>
+        <div class="project-item" data-filename="Stay_Daryl_Ong.mp4" data-title="Stay Animation Music Video" data-date="2026" data-description="An animated music video sequence created for Daryl Ong's 'Stay', pairing visual storytelling with the song's mood and pacing."></div>
       </div>
     </div>
 
     <div class="project-category" data-category="others">
-      <div class="category-header">
+      <button type="button" class="others-toggle" id="othersToggle" aria-expanded="false" aria-controls="othersContent">
+        <span class="others-toggle-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </span>
         <span class="category-heading-text">Others</span>
         <span class="cat-line"></span>
-      </div>
+      </button>
 
-      <div class="subcategory-block" data-subcat-group="graphic-design">
-        <div class="subcategory-header">
-          <p class="subcategory-title">Graphic Design</p>
-        </div>
-        <div class="subcategory-filters" data-subfilter-group="graphic-design">
-          <button class="subfilter-btn active" data-subfilter="all">All</button>
-          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
-          <button class="subfilter-btn" data-subfilter="mockup">Mockup</button>
-        </div>
-        <div class="project-grid">
-          <div class="project-item" data-filename="Sports Graphic.png" data-title="Event Poster Design" data-date="2025" data-subcategory="poster"></div>
-          <div class="project-item" data-filename="Ecomposter.png" data-title="Ecommerce Poster Design" data-date="2022" data-subcategory="poster"></div>
-          <div class="project-item" data-filename="ArfixStudio_Mockup warmer.png" data-title="UC-SDO Warmer Jacket Mockup" data-date="2025" data-subcategory="mockup"></div>
-          <div class="project-item" data-filename="PRISAA POLO.png" data-title="PRISAA Polo Shirt Mockup" data-date="2026" data-subcategory="mockup"></div>
+      <div class="others-content" id="othersContent">
+        <div class="others-content-inner">
+
+          <div class="subcategory-block" data-subcat-group="graphic-design">
+            <div class="subcategory-header">
+              <p class="subcategory-title">Graphic Design</p>
+            </div>
+            <div class="subcategory-filters" data-subfilter-group="graphic-design">
+              <button class="subfilter-btn active" data-subfilter="all">All</button>
+              <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+              <button class="subfilter-btn" data-subfilter="mockup">Mockup</button>
+            </div>
+            <div class="project-grid">
+              <div class="project-item" data-filename="Sports Graphic.png" data-title="Event Poster Design" data-date="2025" data-subcategory="poster" data-description="A sports event poster designed to grab attention fast, using bold type and high-energy graphics suited for print and social media."></div>
+              <div class="project-item" data-filename="Ecomposter.png" data-title="Ecommerce Poster Design" data-date="2022" data-subcategory="poster" data-description="A promotional poster created for an e-commerce campaign, laid out to highlight the product and offer at a glance."></div>
+              <div class="project-item" data-filename="ArfixStudio_Mockup warmer.png" data-title="UC-SDO Warmer Jacket Mockup" data-date="2025" data-subcategory="mockup" data-description="A realistic mockup presentation of a warmer jacket design made for UC-SDO, used to preview the print/embroidery placement before production."></div>
+              <div class="project-item" data-filename="PRISAA POLO.png" data-title="PRISAA Polo Shirt Mockup" data-date="2026" data-subcategory="mockup" data-description="A polo shirt mockup created for PRISAA, showcasing the design layout and colorway ahead of the actual print run."></div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -1257,6 +1395,7 @@
     <div class="lightbox-caption">
       <div class="work-title" id="lightboxTitle"></div>
       <div class="work-date" id="lightboxDate"></div>
+      <p class="lightbox-description" id="lightboxDescription"></p>
     </div>
   </div>
 </div>
@@ -1282,10 +1421,24 @@
     var filename = item.getAttribute('data-filename');
     var title = item.getAttribute('data-title') || filename;
     var date = item.getAttribute('data-date') || '';
+    var description = item.getAttribute('data-description') || '';
     var video = isVideoFile(filename);
 
     function buildLoadedItem(){
       item.innerHTML = '';
+
+      // Poster-style items use object-fit:contain (see CSS), which can
+      // leave empty space around the artwork if its proportions don't
+      // exactly match the frame. Fill that space with a blurred copy of
+      // the same image -- same trick Instagram/FB Stories uses so the
+      // background looks like it's "cast" from the photo's own colors.
+      var isPosterImage = !video && item.getAttribute('data-subcategory') === 'poster';
+      if (isPosterImage){
+        var backdrop = document.createElement('div');
+        backdrop.className = 'poster-backdrop';
+        backdrop.style.backgroundImage = "url('assets/" + filename + "')";
+        item.appendChild(backdrop);
+      }
 
       var media = document.createElement(video ? 'video' : 'img');
       media.src = 'assets/' + filename;
@@ -1318,7 +1471,7 @@
 
       expand.addEventListener('click', function(e){
         e.stopPropagation();
-        openLightbox(filename, title, date, video);
+        openLightbox(filename, title, date, video, description);
       });
 
       item.addEventListener('click', function(){
@@ -1331,7 +1484,7 @@
           return;
         }
         // Desktop click, or a second tap on mobile, enlarges the work
-        openLightbox(filename, title, date, video);
+        openLightbox(filename, title, date, video, description);
       });
     }
 
@@ -1358,9 +1511,10 @@
   var lightboxMedia = document.getElementById('lightboxMedia');
   var lightboxTitle = document.getElementById('lightboxTitle');
   var lightboxDate = document.getElementById('lightboxDate');
+  var lightboxDescription = document.getElementById('lightboxDescription');
   var lightboxClose = document.getElementById('lightboxClose');
 
-  function openLightbox(filename, title, date, isVideo){
+  function openLightbox(filename, title, date, isVideo, description){
     lightboxMedia.innerHTML = '';
     var media = document.createElement(isVideo ? 'video' : 'img');
     media.src = 'assets/' + filename;
@@ -1373,6 +1527,8 @@
     lightboxMedia.appendChild(media);
     lightboxTitle.textContent = title;
     lightboxDate.textContent = date;
+    lightboxDescription.textContent = description || '';
+    lightboxDescription.style.display = description ? '' : 'none';
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -1406,6 +1562,35 @@
       });
     });
   });
+
+  // ---- Service cards -> jump to Projects, pre-filtered to the matching category ----
+  var serviceCards = document.querySelectorAll('.service-card[data-project-filter]');
+  serviceCards.forEach(function(card){
+    function goToFilteredProjects(){
+      var target = card.getAttribute('data-project-filter');
+      var matchingBtn = document.querySelector('#projectFilters .filter-btn[data-filter="' + target + '"]');
+      if (matchingBtn) matchingBtn.click();
+
+      var projectsSection = document.getElementById('projects');
+      if (projectsSection) projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    card.addEventListener('click', goToFilteredProjects);
+    card.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        goToFilteredProjects();
+      }
+    });
+  });
+
+  // ---- "Others" collapsible: hidden until the person clicks the toggle ----
+  var othersToggle = document.getElementById('othersToggle');
+  if (othersToggle){
+    othersToggle.addEventListener('click', function(){
+      var isOpen = othersToggle.closest('.project-category').classList.toggle('is-open');
+      othersToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
 
   // ---- Sub-filters (e.g. "Others" > Graphic Design > Poster / Mockup) ----
   // Scoped per subcategory-block so multiple sub-filter groups can coexist.
@@ -1498,6 +1683,25 @@
     scaleHero();
     window.addEventListener('resize', scaleHero);
     window.addEventListener('orientationchange', scaleHero);
+    window.addEventListener('load', scaleHero);
+
+    // On mobile, images inside the hero (name graphic, head, background)
+    // can still be downloading the moment this script first runs -- that
+    // locks frame.style.height in too small, so once they finish loading
+    // the extra content gets clipped by the frame's overflow. Re-measure
+    // as each one finishes.
+    var heroImages = hero.querySelectorAll('img');
+    heroImages.forEach(function(img){
+      if (img.complete) return;
+      img.addEventListener('load', scaleHero);
+    });
+
+    // Belt-and-suspenders: keep the frame height correct if the hero's
+    // natural size changes for any other reason (web font swap, etc.).
+    if ('ResizeObserver' in window){
+      var heroResizeObserver = new ResizeObserver(function(){ scaleHero(); });
+      heroResizeObserver.observe(hero);
+    }
   })();
 
   // ---- 4) Navbar: scroll state + mobile hamburger/drawer ----
