@@ -115,7 +115,7 @@
      mobile scale-down transform -- always true, native size. */
   nav#navbar{
     position:fixed; top:0; left:0; width:100%; z-index:1000;
-    display:flex; align-items:center; justify-content:space-between;
+    display:flex; align-items:center; justify-content:flex-end;
     padding:16px 48px;
     background:rgba(2,9,6,0);
     transition:background .4s ease, padding .4s ease, box-shadow .4s ease;
@@ -253,7 +253,7 @@
   body.mobile-nav-locked{ overflow:hidden; }
 
   @media (max-width:900px){
-    nav#navbar{ padding:14px 20px; }
+    nav#navbar{ padding:14px 20px; justify-content:flex-start; }
     .nav-pill{ display:none; }
     .hamburger{ display:flex; }
   }
@@ -407,12 +407,21 @@
   .subfilter-btn:hover{ border-color:var(--green); }
   .subfilter-btn.active{ background:var(--green); color:#04140b; border-color:var(--green); }
 
-  .hero-mid{ display:flex; flex-direction:column; align-items:flex-end; gap:14px; }
+  .hero-mid{
+    display:flex; flex-direction:column; align-items:flex-end; gap:14px;
+    /* ---- MOVE "JOEY FLORENCIO.png" + WATCH DEMO + SOCIALS TOGETHER ----
+       This whole group (name graphic, watch-demo button, social icons)
+       shifts as one unit. Negative --mid-x = left (closer to the head),
+       negative --mid-y = up. */
+    --mid-x: 80px;
+    --mid-y: 0px;
+    transform: translate(var(--mid-x), var(--mid-y));
+  }
 
   .name-graphic{
     position:relative;
     align-self:flex-end;
-    width:min(560px, 100%);
+    width:min(680px, 100%);
     margin-top:30px;
     opacity:0;
     animation: nameGraphicIn 0.9s ease-in 0.15s forwards;
@@ -482,6 +491,17 @@
   .btn-watch:hover{ transform:translateY(-2px); filter:brightness(1.15); }
   .btn-watch img{ height:64px; width:auto; }
 
+  /* ---- GROUP: WATCH DEMO BUTTON + SOCIAL ICONS ----
+     Wraps the Watch Demo button and the Facebook/Behance/LinkedIn row so
+     they move together as one unit, same idea as .hero-mid's --mid-x/y.
+     Negative --actions-x = left, negative --actions-y = up. */
+  .hero-actions{
+    display:flex; flex-direction:column; align-items:flex-end; gap:14px;
+    --actions-x: -80px;
+    --actions-y: 0px;
+    transform: translate(var(--actions-x), var(--actions-y));
+  }
+
   /* ---------------- VIDEO MODAL ---------------- */
   .video-modal{
     position:fixed; inset:0; z-index:10000;
@@ -524,13 +544,6 @@
   /* Contact / social icon row (Facebook, Behance, Email, Mobile) */
   .hero-social{
     display:flex; align-items:center; justify-content:flex-end; gap:20px; margin-top:20px;
-    /* ---- MOVE THE SOCIAL ICONS HERE ----
-       Edit these two values to shift the whole row left/right and
-       up/down (negative = left/up, positive = right/down). Change
-       "gap" above to open/close the spacing between the icons. */
-    --social-x: 0px;
-    --social-y: 0px;
-    transform: translate(var(--social-x), var(--social-y));
   }
   .social-link{ display:inline-flex; align-items:center; justify-content:center; transition:transform .2s ease, filter .2s ease; }
   .social-link:hover{ transform:translateY(-3px); filter:brightness(1.2); }
@@ -1057,7 +1070,6 @@
 
   <!-- ================= NAVBAR ================= -->
   <nav id="navbar">
-    <a href="#home" class="nav-logo">JOEY<span class="nav-logo-dot"></span></a>
     <ul class="nav-pill">
       <li><a href="#home">Home</a></li>
       <li><a href="#projects">Projects</a></li>
@@ -1073,7 +1085,6 @@
   <div class="menu-overlay" id="menuOverlay"></div>
 
   <div class="mobile-menu" id="mobileMenu">
-    <span class="mobile-menu-logo">JOEY<span></span></span>
     <a href="#home" data-mobile-link>Home</a>
     <a href="#projects" data-mobile-link>Projects</a>
     <a href="#services" data-mobile-link>Services</a>
@@ -1097,32 +1108,34 @@
             <img src="assets/JOEY FLORENCIO.png" alt="Joey Florencio">
             <div class="name-glow" aria-hidden="true"></div>
           </div>
-          <div class="hero-cta">
-            <button type="button" class="btn-watch" id="watchDemoBtn"><img src="assets/WATCH DEMO.png" alt="Watch Demo"></button>
-          </div>
+          <div class="hero-actions">
+            <div class="hero-cta">
+              <button type="button" class="btn-watch" id="watchDemoBtn"><img src="assets/WATCH DEMO.png" alt="Watch Demo"></button>
+            </div>
 
-          <!-- ============ CONTACT / SOCIAL ICONS (HERO BANNER ONLY) ============
-               Email + phone were removed here since they're already covered
-               in the Contact section further down -- this row is just
-               Facebook, Behance, LinkedIn.
+            <!-- ============ CONTACT / SOCIAL ICONS (HERO BANNER ONLY) ============
+                 Email + phone were removed here since they're already covered
+                 in the Contact section further down -- this row is just
+                 Facebook, Behance, LinkedIn.
 
-               - Facebook: replace the href with your Facebook profile URL
-               - Behance:  replace the href with your Behance profile URL
-               - LinkedIn: links to your LinkedIn profile. The icon is drawn
-                           as inline SVG (not an image file) so it always
-                           matches size/color with no asset to upload --
-                           see the note in chat for why.
-          ================================================== -->
-          <div class="hero-social">
-            <a href="https://www.facebook.com/ArfixPH2022" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
-              <img src="assets/facebook.png" alt="Facebook">
-            </a>
+                 - Facebook: replace the href with your Facebook profile URL
+                 - Behance:  replace the href with your Behance profile URL
+                 - LinkedIn: links to your LinkedIn profile. The icon is drawn
+                             as inline SVG (not an image file) so it always
+                             matches size/color with no asset to upload --
+                             see the note in chat for why.
+            ================================================== -->
+            <div class="hero-social">
+              <a href="https://www.facebook.com/ArfixPH2022" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
+                <img src="assets/facebook.png" alt="Facebook">
+              </a>
             <a href="https://www.behance.net/joeyflorencio98" target="_blank" rel="noopener" class="social-link" aria-label="Behance">
               <img src="assets/Behance.png" alt="Behance">
             </a>
             <a href="https://www.linkedin.com/in/joey-florencio-a265b7212" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
               <svg viewBox="0 0 24 24" fill="currentColor" style="color:#eafff3"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
             </a>
+            </div>
           </div>
         </div>
       </div>
@@ -1237,9 +1250,9 @@
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></div>
         <span class="service-name">3D Animation</span>
       </div>
-      <div class="service-card" data-project-filter="motion-graphics" tabindex="0" role="button" aria-label="View Motion Graphics projects">
+      <div class="service-card" data-project-filter="motion-graphics" tabindex="0" role="button" aria-label="View Animation projects">
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg></div>
-        <span class="service-name">Motion Graphics</span>
+        <span class="service-name">Animation</span>
       </div>
     </div>
   </div>
@@ -1261,7 +1274,7 @@
     <button class="filter-btn active" data-filter="all">All</button>
     <button class="filter-btn" data-filter="scene-design">Scene Design</button>
     <button class="filter-btn" data-filter="logo-illustrations">Logo Illustrations</button>
-    <button class="filter-btn" data-filter="motion-graphics">Animations</button>
+    <button class="filter-btn" data-filter="motion-graphics">Animation</button>
     <button class="filter-btn" data-filter="others">Others</button>
   </div>
 
@@ -1292,17 +1305,45 @@
       </div>
     </div>
 
+    <!-- Renamed from "Motion Graphics" to "Animation" -- no ANIMATION.png
+         header graphic exists yet, so this uses the same text-heading
+         style as "Others" below. Drop an "assets/ANIMATION.png" in later
+         and swap the <span class="category-heading-text"> line back to
+         an <img> tag (matching Scene Design / Logo Illustrations above)
+         if you'd rather have a graphic header. -->
     <div class="project-category" data-category="motion-graphics">
       <div class="category-header">
-        <img src="assets/MOTION GRAPHICS.png" alt="Motion Graphics">
+        <span class="category-heading-text">Animation</span>
         <span class="cat-line"></span>
       </div>
-      <div class="project-grid">
-        <div class="project-item" data-filename="Ocushield logo Animation.mp4" data-title="Ocushield Logo Animation" data-date="2026" data-description="A short logo reveal animation for Ocushield, designed to introduce the brand with a clean, confident motion sequence."></div>
-        <div class="project-item" data-filename="Florencio_JM_EXR-FN-03_vFinalRender.mp4" data-title="Product Animation" data-date="2026" data-description="A product showcase animation focused on highlighting form and detail through smooth camera movement and lighting."></div>
-        <div class="project-item" data-filename="Arfix_Digital_Solution_Logo_Animation.mp4" data-title="Arfix Digital" data-date="2026" data-description="A logo animation created for Arfix Digital Solutions, built to feel sharp and modern for use across their digital platforms."></div>
-        <div class="project-item" data-filename="Aladdin.mp4" data-title="Alladin Album Cover" data-date="2026" data-description="A motion piece built around an Aladdin-inspired album cover, bringing a static illustration to life with subtle animated detail."></div>
-        <div class="project-item" data-filename="Stay_Daryl_Ong.mp4" data-title="Stay Animation Music Video" data-date="2026" data-description="An animated music video sequence created for Daryl Ong's 'Stay', pairing visual storytelling with the song's mood and pacing."></div>
+
+      <div class="subcategory-block" data-subcat-group="motion-graphics-sub">
+        <div class="subcategory-header">
+          <p class="subcategory-title">Motion Graphics</p>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Ocushield logo Animation.mp4" data-title="Ocushield Logo Animation" data-date="2026" data-description="A short logo reveal animation for Ocushield, designed to introduce the brand with a clean, confident motion sequence."></div>
+          <div class="project-item" data-filename="Arfix_Digital_Solution_Logo_Animation.mp4" data-title="Arfix Digital" data-date="2026" data-description="A logo animation created for Arfix Digital Solutions, built to feel sharp and modern for use across their digital platforms."></div>
+        </div>
+      </div>
+
+      <div class="subcategory-block" data-subcat-group="2d-animation">
+        <div class="subcategory-header">
+          <p class="subcategory-title">2D Animation</p>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Aladdin.mp4" data-title="Alladin Album Cover" data-date="2026" data-description="A motion piece built around an Aladdin-inspired album cover, bringing a static illustration to life with subtle animated detail."></div>
+          <div class="project-item" data-filename="Stay_Daryl_Ong.mp4" data-title="Stay Animation Music Video" data-date="2026" data-description="An animated music video sequence created for Daryl Ong's 'Stay', pairing visual storytelling with the song's mood and pacing."></div>
+        </div>
+      </div>
+
+      <div class="subcategory-block" data-subcat-group="3d-animation">
+        <div class="subcategory-header">
+          <p class="subcategory-title">3D Animation</p>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Florencio_JM_EXR-FN-03_vFinalRender.mp4" data-title="Product Animation" data-date="2026" data-description="A product showcase animation focused on highlighting form and detail through smooth camera movement and lighting."></div>
+        </div>
       </div>
     </div>
 
