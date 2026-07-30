@@ -253,7 +253,7 @@
   body.mobile-nav-locked{ overflow:hidden; }
 
   @media (max-width:900px){
-    nav#navbar{ padding:14px 20px; justify-content:flex-start; }
+    nav#navbar{ padding:14px 20px; justify-content:flex-end; }
     .nav-pill{ display:none; }
     .hamburger{ display:flex; }
   }
@@ -618,15 +618,15 @@
   }
   .tools-overlay-text{
     position:relative;
-    font-size:1.05rem;
+    font-size:0.82rem;
     font-weight:300;
     font-style:italic;
     letter-spacing:.01em;
     text-transform:none;
-    line-height:1.7;
+    line-height:1.6;
     color:var(--green-soft);
     margin:0;
-    padding-top:20px;
+    padding-top:18px;
     opacity:0; transform:translateY(10px);
     animation:toolTextIn .5s ease forwards;
     animation-delay:.35s;
@@ -1035,39 +1035,78 @@
     display:none; align-items:center; justify-content:center;
     padding:28px;
     background:rgba(2,6,4,0.94);
-    backdrop-filter:blur(4px);
+    backdrop-filter:blur(6px);
   }
   .lightbox.active{ display:flex; }
-  .lightbox-inner{ position:relative; max-width:min(92vw, 1100px); max-height:88vh; display:flex; flex-direction:column; align-items:center; }
+  .lightbox-inner{
+    position:relative;
+    max-width:min(92vw, 880px);
+    max-height:88vh;
+    width:100%;
+    display:flex; flex-direction:column; align-items:stretch;
+    overflow-y:auto;
+    background:linear-gradient(180deg, rgba(11,24,17,0.92), rgba(4,9,6,0.96));
+    border:1px solid var(--panel-line);
+    border-radius:20px;
+    box-shadow:0 40px 90px rgba(0,0,0,0.55), 0 0 60px rgba(57,255,143,0.08);
+    opacity:0; transform:translateY(14px) scale(.98);
+    transition:opacity .28s ease, transform .28s ease;
+  }
+  .lightbox.active .lightbox-inner{ opacity:1; transform:translateY(0) scale(1); }
+  .lightbox-media{ position:relative; line-height:0; background:#000; border-radius:20px 20px 0 0; overflow:hidden; display:flex; align-items:center; justify-content:center; }
   .lightbox-inner img, .lightbox-inner video{
-    max-width:min(92vw, 1100px); max-height:72vh; width:auto; height:auto;
-    border-radius:12px; box-shadow:0 0 60px rgba(57,255,143,0.12);
+    max-width:100%; max-height:64vh; width:auto; height:auto;
+    object-fit:contain;
     display:block;
+    margin:0 auto;
     touch-action: pan-y;
   }
-  .lightbox-caption{ margin-top:18px; text-align:center; }
-  .lightbox-caption .work-title{ font-size:16px; font-weight:bold; letter-spacing:.05em; text-transform:uppercase; color:#eafff3; }
-  .lightbox-caption .work-date{ font-size:12px; letter-spacing:.06em; color:var(--green-soft); opacity:.85; margin-top:5px; }
+  .lightbox-caption{ padding:26px 40px 32px; text-align:center; }
+  .lightbox-caption .work-title{
+    font-family:'Orbitron','Poppins',sans-serif;
+    font-size:15px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:#eafff3;
+  }
+  .lightbox-caption .work-date{
+    display:inline-block;
+    margin-top:10px;
+    padding:4px 14px;
+    font-size:10.5px; font-weight:700; letter-spacing:.08em;
+    color:#04140b;
+    background:var(--green);
+    border-radius:20px;
+  }
   .lightbox-description{
-    max-width:560px;
-    margin:14px auto 0;
+    position:relative;
+    max-width:520px;
+    margin:20px auto 0;
+    padding-top:18px;
     font-size:13.5px;
-    line-height:1.7;
-    color:rgba(234,255,243,0.78);
+    line-height:1.75;
+    color:rgba(234,255,243,0.72);
+  }
+  .lightbox-description::before{
+    content:'';
+    position:absolute;
+    top:0; left:50%;
+    width:36px; height:1px;
+    transform:translateX(-50%);
+    background:linear-gradient(90deg, transparent, var(--green), transparent);
   }
   .lightbox-close{
-    position:absolute; top:-46px; right:-6px;
-    width:38px; height:38px; border-radius:50%;
-    background:rgba(2,10,6,0.7); border:1px solid var(--panel-line);
-    color:#eafff3; font-size:20px; line-height:1; cursor:pointer;
+    position:absolute; top:14px; right:14px;
+    width:34px; height:34px; border-radius:50%;
+    background:rgba(2,10,6,0.75); border:1px solid var(--panel-line);
+    color:#eafff3; font-size:19px; line-height:1; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
-    transition:border-color .2s, color .2s;
+    transition:border-color .2s, color .2s, background .2s;
+    z-index:3;
+    backdrop-filter:blur(4px);
   }
-  .lightbox-close:hover{ border-color:var(--green); color:var(--green); }
+  .lightbox-close:hover{ border-color:var(--green); color:var(--green); background:rgba(2,10,6,0.9); }
 
   /* Gallery prev/next arrows + dot indicators (only rendered when a box has >1 file) */
   .lightbox-arrow{
-    position:absolute; top:50%; transform:translateY(-50%);
+    position:absolute; top:0; bottom:0; margin:auto 0;
     width:44px; height:44px; border-radius:50%;
     background:rgba(2,10,6,0.65); border:1px solid var(--panel-line);
     color:#eafff3; display:flex; align-items:center; justify-content:center;
@@ -1079,7 +1118,7 @@
   .lightbox-arrow.next{ right:-16px; }
   .lightbox-arrow svg{ width:18px; height:18px; }
 
-  .lightbox-dots{ display:flex; gap:8px; margin-top:14px; }
+  .lightbox-dots{ display:flex; justify-content:center; gap:8px; margin-top:18px; }
   .lightbox-dot{
     width:7px; height:7px; border-radius:50%;
     background:rgba(234,255,243,0.3); border:none; cursor:pointer;
@@ -1088,7 +1127,8 @@
   .lightbox-dot.active{ background:var(--green); transform:scale(1.25); }
 
   @media (max-width:900px){
-    .lightbox-close{ top:-40px; right:0; }
+    .lightbox-inner{ max-width:96vw; }
+    .lightbox-caption{ padding:22px 22px 26px; }
     .lightbox-arrow{ width:36px; height:36px; }
     .lightbox-arrow.prev{ left:-6px; }
     .lightbox-arrow.next{ right:-6px; }
@@ -1797,25 +1837,25 @@
   // add the matching PNG there if a tool isn't showing up yet.
   var TOOLS_DATA = {
     'illustrations': {
-      caption: 'The artist uses this tool to create a project',
+      caption: 'Crafted with this tool',
       tools: [
         { src: 'assets/Adobe Illustrator.png', name: 'Adobe Illustrator' }
       ]
     },
     'graphics-layout': {
-      caption: 'The artist uses this tool to create a project',
+      caption: 'Crafted with this tool',
       tools: [
         { src: 'assets/Photoshop.png', name: 'Adobe Photoshop' }
       ]
     },
     '3d-animation': {
-      caption: 'The artist uses this tool to create a project',
+      caption: 'Crafted with this tool',
       tools: [
         { src: 'assets/blender.png', name: 'Blender' }
       ]
     },
     'animation': {
-      caption: 'The artist uses these tools to create a project',
+      caption: 'Crafted with these tools',
       tools: [
         { src: 'assets/Adobe Premiere.png', name: 'Adobe Premiere' },
         { src: 'assets/blender.png', name: 'Blender' }
