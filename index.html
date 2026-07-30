@@ -6,7 +6,7 @@
 <title>Joey Florencio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg-0:#050906;
@@ -297,6 +297,18 @@
   }
 
   /* ---------------- SERVICES ---------------- */
+  .services-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:60px;
+    flex-wrap:wrap;
+    padding:0 48px 60px;
+  }
+  .services-left{
+    flex:0 1 380px;
+    max-width:380px;
+  }
   .services-title{
     font-size:clamp(1.6rem, 3vw, 2.15rem);
     font-weight:900;
@@ -306,8 +318,7 @@
     margin:0;
   }
   .services-intro{
-    max-width:760px;
-    margin:0 0 52px;
+    margin:0 0 28px;
     text-align:left;
   }
   .services-intro p{
@@ -316,34 +327,22 @@
     color:rgba(234,255,243,0.82);
     margin:0 0 22px;
   }
-  .services-read-more{
-    display:inline-block;
-    font-size:13px;
-    font-weight:bold;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    color:#04140b;
-    background:var(--green);
-    border-radius:999px;
-    padding:13px 32px;
-    margin-top:6px;
-    transition:transform .2s ease, filter .2s ease;
-  }
-  .services-read-more:hover{ transform:translateY(-2px); filter:brightness(1.08); }
-
-  .services-wrap{ padding:0 48px 60px; }
   .services-grid{
+    flex:1 1 480px;
+    max-width:600px;
     display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:22px;
+    grid-template-columns:repeat(2, 1fr);
+    gap:26px;
   }
   .service-card{
-    border-radius:20px;
+    border-radius:22px;
     border:1.5px solid rgba(57,255,143,0.35);
     background:radial-gradient(120% 140% at 50% -10%, rgba(13,46,29,0.5) 0%, rgba(2,8,5,0.72) 65%);
-    padding:34px 22px;
+    padding:44px 32px;
     text-align:center;
-    display:flex; flex-direction:column; align-items:center; gap:16px;
+    display:flex; flex-direction:column; align-items:center; gap:22px;
+    min-height:190px;
+    justify-content:center;
     transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease;
     cursor:pointer;
   }
@@ -354,21 +353,25 @@
     box-shadow:0 0 26px rgba(57,255,143,0.15);
   }
   .service-icon{
-    width:52px; height:52px;
+    width:76px; height:76px;
     display:flex; align-items:center; justify-content:center;
-    border-radius:14px;
-    background:rgba(57,255,143,0.12);
+    border-radius:16px;
+    border:1.5px solid rgba(57,255,143,0.55);
+    background:rgba(57,255,143,0.08);
     color:var(--green);
   }
-  .service-icon svg{ width:26px; height:26px; }
+  .service-icon svg{ width:38px; height:38px; }
   .service-name{
-    font-size:.85rem; font-weight:bold; letter-spacing:.04em;
-    text-transform:uppercase; color:#eafff3;
+    font-size:1.05rem; font-weight:bold; letter-spacing:.03em;
+    text-transform:none; color:#eafff3;
   }
   @media (max-width:900px){
-    .services-wrap{ padding:0 20px 40px; }
-    .services-grid{ grid-template-columns:repeat(2, 1fr); gap:16px; }
-    .services-intro{ margin-bottom:34px; }
+    .services-row{ padding:0 20px 40px; flex-direction:column; gap:34px; }
+    .services-left{ max-width:none; flex-basis:auto; }
+    .services-grid{ max-width:none; flex-basis:auto; gap:16px; }
+    .service-card{ padding:30px 18px; min-height:150px; }
+    .service-icon{ width:60px; height:60px; }
+    .service-icon svg{ width:30px; height:30px; }
   }
   @media (max-width:520px){
     .services-grid{ grid-template-columns:1fr; }
@@ -378,11 +381,15 @@
      which doesn't have a label graphic yet) -- matches the visual
      weight/height of the existing category-header images. */
   .category-heading-text{
+    font-family:'Orbitron', 'Poppins', sans-serif;
     font-size:1.15rem;
     font-weight:900;
     letter-spacing:.06em;
     text-transform:uppercase;
     color:#eafff3;
+    text-shadow:0 0 12px rgba(57,255,143,0.4);
+    transform:skewX(-8deg);
+    display:inline-block;
   }
 
   /* Nested Graphic Design sub-category (Poster / Mockup) inside the
@@ -541,6 +548,109 @@
     .video-modal-close{ top:-40px; width:30px; height:30px; font-size:16px; }
   }
 
+  /* ---------------- TOOLS OVERLAY (opens from the 4 service cards) ---------------- */
+  .tools-overlay{
+    position:fixed; inset:0; z-index:10000;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    background:rgba(2,6,4,0.9);
+    opacity:0; visibility:hidden;
+    transition:opacity .25s ease, visibility .25s ease;
+  }
+  .tools-overlay.is-open{ opacity:1; visibility:visible; }
+  .tools-overlay-box{
+    position:relative;
+    width:100%; max-width:560px;
+    background:radial-gradient(120% 140% at 50% -10%, rgba(13,46,29,0.65) 0%, rgba(2,8,5,0.92) 65%);
+    border:1.5px solid rgba(57,255,143,0.5);
+    border-radius:22px;
+    box-shadow:0 0 40px rgba(57,255,143,0.15);
+    padding:52px 36px 40px;
+    text-align:center;
+    transform:scale(.94);
+    transition:transform .25s ease;
+  }
+  .tools-overlay.is-open .tools-overlay-box{ transform:scale(1); }
+  .tools-overlay-close{
+    position:absolute; top:-44px; right:0;
+    width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(2,10,6,0.6);
+    border:1px solid var(--panel-line);
+    border-radius:50%;
+    color:#eafff3; font-size:18px; line-height:1;
+    cursor:pointer;
+    transition:border-color .2s, background .2s;
+  }
+  .tools-overlay-close:hover{ border-color:var(--green); background:rgba(2,10,6,0.9); }
+  .tools-overlay-eyebrow{
+    font-size:.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+    color:var(--green); margin:0 0 22px;
+  }
+  .tools-overlay-logos{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+    gap:26px; margin-bottom:26px;
+  }
+  .tool-logo-item{
+    width:82px; height:82px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:18px;
+    border:1.5px solid rgba(57,255,143,0.4);
+    background:rgba(57,255,143,0.06);
+    opacity:0; transform:scale(.5);
+    animation:toolLogoIn .45s ease forwards;
+  }
+  .tool-logo-spin{
+    width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:14px;
+    animation:toolLogoWobble 2.6s ease-in-out infinite;
+    animation-delay:inherit;
+  }
+  .tool-logo-item img{ width:100%; height:100%; object-fit:contain; }
+  @keyframes toolLogoIn{
+    from{ opacity:0; transform:scale(.5) rotate(-25deg); }
+    to{ opacity:1; transform:scale(1) rotate(0deg); }
+  }
+  @keyframes toolLogoWobble{
+    0%, 100%{ transform:rotate(0deg); }
+    50%{ transform:rotate(9deg); }
+  }
+  .tools-overlay-text{
+    position:relative;
+    font-size:1.05rem;
+    font-weight:300;
+    font-style:italic;
+    letter-spacing:.01em;
+    text-transform:none;
+    line-height:1.7;
+    color:var(--green-soft);
+    margin:0;
+    padding-top:20px;
+    opacity:0; transform:translateY(10px);
+    animation:toolTextIn .5s ease forwards;
+    animation-delay:.35s;
+  }
+  .tools-overlay-text::before{
+    content:'';
+    position:absolute;
+    top:0; left:50%;
+    width:34px; height:1px;
+    transform:translateX(-50%);
+    background:linear-gradient(90deg, transparent, var(--green), transparent);
+  }
+  @keyframes toolTextIn{
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .tool-logo-item, .tool-logo-spin, .tools-overlay-text{ animation:none !important; opacity:1 !important; transform:none !important; }
+  }
+  @media (max-width:600px){
+    .tools-overlay-close{ top:-40px; width:30px; height:30px; font-size:16px; }
+    .tools-overlay-box{ padding:44px 22px 32px; }
+    .tool-logo-item{ width:68px; height:68px; }
+  }
+
   /* Contact / social icon row (Facebook, Behance, Email, Mobile) */
   .hero-social{
     display:flex; align-items:center; justify-content:flex-end; gap:20px; margin-top:20px;
@@ -555,9 +665,43 @@
   .section-heading{ margin-bottom:48px; }
   .section-heading img{ height:56px; width:auto; }
 
+  /* Real-font replacement for the old "ABOUT ME SECTION.png" /
+     "PROJECTS SECTION.png" / "CONTACT US SECTION.png" graphics.
+     Orbitron + a slight skew gets close to the slanted, cut-corner
+     look of the original artwork, with a glowing underline stroke
+     standing in for the diagonal accent bar. */
+  .section-label{
+    display:inline-flex;
+    align-items:center;
+    gap:16px;
+    margin:0;
+    font-family:'Orbitron', 'Poppins', sans-serif;
+    font-weight:900;
+    font-size:clamp(1.5rem, 3vw, 2.1rem);
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:#eafff3;
+    text-shadow:0 0 18px rgba(57,255,143,0.45);
+  }
+  .section-label .label-text{
+    display:inline-block;
+    transform:skewX(-8deg);
+  }
+  .section-label::after{
+    content:"";
+    display:inline-block;
+    width:70px; height:3px;
+    background:linear-gradient(90deg, var(--green), rgba(57,255,143,0));
+    transform:skewX(-25deg);
+    box-shadow:0 0 12px rgba(57,255,143,0.7);
+  }
+  @media (max-width:600px){
+    .section-label::after{ width:40px; }
+  }
+
   .about-frames{
     display:flex;
-    align-items:flex-start;
+    align-items:stretch;
     gap:6%;
     padding:70px 48px 120px;
   }
@@ -567,6 +711,21 @@
     display:flex;
     flex-direction:column;
     gap:28px;
+  }
+  /* Right column only has one card (Skills), so let it grow to match
+     the combined height of the two cards on the left, then distribute
+     its own content top-to-bottom so nothing looks like leftover
+     empty space at the bottom of the box. */
+  .about-col-right .frame-card{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
+  .about-col-right .frame-content{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
   }
   /* Card is now drawn with CSS (rounded border + soft glow, matching the
      look of the frame art) and sized to its own content, instead of
@@ -598,6 +757,13 @@
     margin:0;
   }
 
+  .about-skills-intro{
+    font-size:.9rem;
+    line-height:1.7;
+    color:rgba(234,255,243,0.78);
+    margin:0 0 20px;
+  }
+
   .about-skills-list{
     list-style:none; margin:0; padding:0;
     display:flex; flex-direction:column; gap:10px;
@@ -624,26 +790,26 @@
     background:rgba(2,10,6,0.8);
   }
 
-  /* Row of editing-tool logo icons under the skills list */
-  .about-tools{
+  /* Availability status strip under the skills list -- fills the space
+     the tool-logo row used to take, and balances the card height against
+     "Educational Attainment" in the left column. */
+  .about-status{
     display:flex;
-    flex-wrap:wrap;
     align-items:center;
-    gap:18px;
+    gap:11px;
     margin-top:26px;
     padding-top:22px;
     border-top:1px solid var(--panel-line);
+    font-size:.82rem;
+    letter-spacing:.02em;
+    color:rgba(234,255,243,0.85);
   }
-  .about-tools img{
-    height:30px;
-    width:auto;
-    opacity:.9;
-    filter:grayscale(15%);
-    transition:opacity .2s, transform .2s;
-  }
-  .about-tools img:hover{
-    opacity:1;
-    transform:translateY(-2px);
+  .about-status .status-dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 10px var(--green);
+    flex-shrink:0;
+    animation:pulse-dot 2.4s ease-in-out infinite;
   }
 
   .about-edu-entry{ display:flex; flex-direction:column; gap:3px; }
@@ -723,7 +889,6 @@
     .about-bio{ font-size:.85rem; }
     .about-skills-list li{ font-size:.76rem; padding:9px 14px; }
     .about-edu-degree{ font-size:.92rem; }
-    .about-tools img{ height:24px; }
   }
 
 
@@ -1039,7 +1204,7 @@
 <div class="preloader" id="preloader">
   <div class="preloader-spinner-wrap">
     <svg class="preloader-spinner-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-dasharray="16 47"></circle>
+      <circle cx="12" cy="12" r="10" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-dasharray="16 47"></circle>
     </svg>
     <div class="preloader-logo-clip">
       <img src="assets/HEAD.png" alt="Joey Florencio">
@@ -1147,7 +1312,7 @@
   <!-- ================= ABOUT ================= -->
   <section id="about" style="padding-bottom:0;">
     <div class="section-heading">
-      <img src="assets/ABOUT ME SECTION.png" alt="About Me">
+      <h2 class="section-label"><span class="label-text">About Me</span></h2>
     </div>
   </section>
 
@@ -1161,8 +1326,7 @@
             on vector illustration, logo design, and motion graphics. I'm currently
             completing my Bachelor of Multimedia Arts at the University of the Cordilleras,
             where I've been sharpening my skills in digital art and animation. I enjoy
-            turning ideas into clean, bold visuals — from character illustrations to
-            animated brand identities — and I'm always looking to pick up new tools and
+            turning ideas into clean, bold visuals and I'm always looking to pick up new tools and
             techniques along the way.
           </p>
         </div>
@@ -1187,22 +1351,25 @@
       <div class="frame-card">
         <div class="frame-content">
           <h3 class="frame-title">Skills</h3>
+          <p class="about-skills-intro">
+            A quick snapshot of the tools and disciplines I lean on most —
+            from illustration and layout to motion and 3D — built up through
+            coursework, freelance projects, and a lot of personal practice.
+          </p>
           <ul class="about-skills-list">
-            <li>Graphic Design with Adobe Photoshop</li>
             <li>Illustrations with Adobe Illustrator</li>
-            <li>UI / UX with Figma</li>
             <li>Motion Graphic with Adobe Premiere</li>
+            <li>Graphic Design with Adobe Photoshop</li>
+            <li>UI / UX with Figma</li>
             <li>3D Animation with Blender</li>
           </ul>
-          <div class="about-tools">
-            <img src="assets/Photoshop.png" alt="Adobe Photoshop">
-            <img src="assets/Adobe Illustrator.png" alt="Adobe Illustrator">
-			<img src="assets/Indesign.png" alt="Indesign">
-            <img src="assets/Figma.png" alt="Figma">
-            <img src="assets/Adobe Premiere.png" alt="Adobe Premiere">
-            <img src="assets/blender.png" alt="Blender">      
-			<img src="assets/Audacity.png" alt="Audacity">
-			
+          <!-- Suggested addition to fill the space under the skills list
+               and balance the card against "Educational Attainment" on the
+               left. Edit the wording/status below to whatever's actually
+               true for you right now. -->
+          <div class="about-status">
+            <span class="status-dot"></span>
+            <span>Open to freelance &amp; collab work</span>
           </div>
         </div>
       </div>
@@ -1213,49 +1380,51 @@
 
   <!-- ================= SERVICES ================= -->
   <section id="services" style="padding-bottom:0;">
-    <div class="section-heading">
-      <h2 class="services-title">My Services</h2>
-    </div>
-    <div class="services-intro">
-      <p>
-        Illustration, motion graphics, and product showcase animation — three
-        crafts, one goal: turning ideas into visuals that are ready to move,
-        ship, and stand out.
-      </p>
-      <p>
-        From clean vector illustrations and logo designs to animated brand
-        identities and polished product showcase videos, every piece is built
-        with the same attention to detail, from first sketch to final frame.
-      </p>
-      
+    <div class="services-row">
+      <div class="services-left">
+        <div class="section-heading">
+          <h2 class="section-label services-title"><span class="label-text">My Services</span></h2>
+        </div>
+        <div class="services-intro">
+          <p>
+            Illustration, motion graphics, and product showcase animation — three
+            crafts, one goal: turning ideas into visuals that are ready to move,
+            ship, and stand out.
+          </p>
+          <p>
+            From clean vector illustrations and logo designs to animated brand
+            identities and polished product showcase videos, every piece is built
+            with the same attention to detail, from first sketch to final frame.
+          </p>
+        </div>
+      </div>
+
+      <!-- ============ SERVICE CARDS -> TOOLS OVERLAY ============
+           data-tools points at a key in the TOOLS_DATA map defined near the
+           bottom of the page (search "TOOLS OVERLAY DATA"). Tapping/clicking
+           a card opens an overlay showing the software logos + caption for
+           that category, with a slight spin-in animation on each logo.
+           Add/remove tool logos per category by editing TOOLS_DATA, not here. -->
+      <div class="services-grid">
+        <div class="service-card" data-tools="illustrations" tabindex="0" role="button" aria-label="Show tools used for Illustrations">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div>
+          <span class="service-name">Illustrations</span>
+        </div>
+        <div class="service-card" data-tools="graphics-layout" tabindex="0" role="button" aria-label="Show tools used for Graphics and Layout">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l5-5 4 4 5-6 4 5"/></svg></div>
+          <span class="service-name">Graphics and Layout</span>
+        </div>
+        <div class="service-card" data-tools="3d-animation" tabindex="0" role="button" aria-label="Show tools used for 3D Animation">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></div>
+          <span class="service-name">3D Animation</span>
+        </div>
+        <div class="service-card" data-tools="animation" tabindex="0" role="button" aria-label="Show tools used for Animation">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg></div>
+          <span class="service-name">Animation</span>
+        </div>
+      </div>
     </div>
   </section>
-
-  <div class="services-wrap">
-    <!-- ============ SERVICE CARDS -> PROJECT CATEGORY LINKS ============
-         data-project-filter matches a data-filter value from the
-         #projectFilters buttons above (see PROJECTS section). Clicking a
-         card scrolls to Projects and switches the filter to that category.
-         Change the value below any time to point a card somewhere else. -->
-    <div class="services-grid">
-      <div class="service-card" data-project-filter="all" tabindex="0" role="button" aria-label="View UI and UX projects">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div>
-        <span class="service-name">Illustrations</span>
-      </div>
-      <div class="service-card" data-project-filter="others" tabindex="0" role="button" aria-label="View Graphics and Layout projects">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l5-5 4 4 5-6 4 5"/></svg></div>
-        <span class="service-name">Graphics and Layout</span>
-      </div>
-      <div class="service-card" data-project-filter="motion-graphics" tabindex="0" role="button" aria-label="View 3D Animation projects">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></div>
-        <span class="service-name">3D Animation</span>
-      </div>
-      <div class="service-card" data-project-filter="motion-graphics" tabindex="0" role="button" aria-label="View Animation projects">
-        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg></div>
-        <span class="service-name">Animation</span>
-      </div>
-    </div>
-  </div>
   <div class="section-gap"></div>
 
   <!-- ================= PROJECTS =================
@@ -1266,7 +1435,7 @@
        text directly inside the quotes of each data-description="..." . -->
   <section id="projects" style="padding-bottom:0;">
     <div class="section-heading">
-      <img src="assets/PROJECTS SECTION.png" alt="Projects">
+      <h2 class="section-label"><span class="label-text">Projects</span></h2>
     </div>
   </section>
 
@@ -1282,7 +1451,7 @@
 
     <div class="project-category" data-category="scene-design">
       <div class="category-header">
-        <img src="assets/SCENE DESIGN.png" alt="Scene Design">
+        <span class="category-heading-text">Scene Design</span>
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
@@ -1295,7 +1464,7 @@
 
     <div class="project-category" data-category="logo-illustrations">
       <div class="category-header">
-        <img src="assets/LOGO ILLUSTRATIONS.png" alt="Logo Illustrations">
+        <span class="category-heading-text">Logo Illustrations</span>
         <span class="cat-line"></span>
       </div>
       <div class="project-grid">
@@ -1386,7 +1555,7 @@
   <!-- ================= CONTACT ================= -->
   <section id="contact" style="padding-bottom:0;">
     <div class="section-heading">
-      <img src="assets/CONTACT US SECTION.png" alt="Contact Us">
+      <h2 class="section-label"><span class="label-text">Contact Us</span></h2>
     </div>
 
     <div class="contact-card">
@@ -1439,6 +1608,23 @@
       <div class="work-date" id="lightboxDate"></div>
       <p class="lightbox-description" id="lightboxDescription"></p>
     </div>
+  </div>
+</div>
+
+<!-- ================= TOOLS OVERLAY =================
+     Opens when a visitor taps/clicks one of the 4 service cards above
+     (Illustrations, Graphics and Layout, 3D Animation, Animation). Logos
+     + caption are filled in by JS from TOOLS_DATA -- see script below.
+     IMPORTANT: this must appear in the HTML *before* the <script> below,
+     since that script does document.getElementById('toolsOverlay') the
+     moment it runs -- if this markup comes after the script tag, the
+     lookup returns null and clicking the 4 boxes silently does nothing. -->
+<div class="tools-overlay" id="toolsOverlay">
+  <div class="tools-overlay-box">
+    <button type="button" class="tools-overlay-close" id="toolsOverlayClose" aria-label="Close">&times;</button>
+    <p class="tools-overlay-eyebrow">Tools of the trade</p>
+    <div class="tools-overlay-logos" id="toolsOverlayLogos"></div>
+    <p class="tools-overlay-text" id="toolsOverlayText"></p>
   </div>
 </div>
 
@@ -1605,24 +1791,139 @@
     });
   });
 
-  // ---- Service cards -> jump to Projects, pre-filtered to the matching category ----
-  var serviceCards = document.querySelectorAll('.service-card[data-project-filter]');
-  serviceCards.forEach(function(card){
-    function goToFilteredProjects(){
-      var target = card.getAttribute('data-project-filter');
-      var matchingBtn = document.querySelector('#projectFilters .filter-btn[data-filter="' + target + '"]');
-      if (matchingBtn) matchingBtn.click();
-
-      var projectsSection = document.getElementById('projects');
-      if (projectsSection) projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // ---- Service cards -> open the Tools Overlay for that category ----
+  // TOOLS OVERLAY DATA: edit this map to change which logos + caption show
+  // up for each of the 4 service cards. "src" paths point into /assets --
+  // add the matching PNG there if a tool isn't showing up yet.
+  var TOOLS_DATA = {
+    'illustrations': {
+      caption: 'The artist uses this tool to create a project',
+      tools: [
+        { src: 'assets/Adobe Illustrator.png', name: 'Adobe Illustrator' }
+      ]
+    },
+    'graphics-layout': {
+      caption: 'The artist uses this tool to create a project',
+      tools: [
+        { src: 'assets/Photoshop.png', name: 'Adobe Photoshop' }
+      ]
+    },
+    '3d-animation': {
+      caption: 'The artist uses this tool to create a project',
+      tools: [
+        { src: 'assets/blender.png', name: 'Blender' }
+      ]
+    },
+    'animation': {
+      caption: 'The artist uses these tools to create a project',
+      tools: [
+        { src: 'assets/Adobe Premiere.png', name: 'Adobe Premiere' },
+        { src: 'assets/blender.png', name: 'Blender' }
+      ]
     }
-    card.addEventListener('click', goToFilteredProjects);
+  };
+
+  var toolsOverlay = document.getElementById('toolsOverlay');
+  var toolsOverlayLogos = document.getElementById('toolsOverlayLogos');
+  var toolsOverlayText = document.getElementById('toolsOverlayText');
+  var toolsOverlayClose = document.getElementById('toolsOverlayClose');
+
+  function openToolsOverlay(key){
+    var data = TOOLS_DATA[key];
+    if (!data || !toolsOverlay) return;
+
+    // Rebuild the logo grid so the entrance + wobble animations replay
+    // fresh every time (re-inserting nodes restarts CSS animations).
+    toolsOverlayLogos.innerHTML = '';
+    data.tools.forEach(function(tool, i){
+      var item = document.createElement('div');
+      item.className = 'tool-logo-item';
+      item.style.animationDelay = (i * 0.12) + 's';
+
+      var spin = document.createElement('div');
+      spin.className = 'tool-logo-spin';
+
+      var img = document.createElement('img');
+      img.src = tool.src;
+      img.alt = tool.name;
+
+      spin.appendChild(img);
+      item.appendChild(spin);
+      toolsOverlayLogos.appendChild(item);
+    });
+
+    toolsOverlayText.textContent = data.caption;
+    // Restart the caption's fade-in animation too.
+    toolsOverlayText.style.animation = 'none';
+    void toolsOverlayText.offsetWidth; // force reflow
+    toolsOverlayText.style.animation = '';
+
+    toolsOverlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeToolsOverlay(){
+    if (!toolsOverlay) return;
+    toolsOverlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  // ---- Tiny synthesized "tap" sound for the 4 service-card boxes ----
+  // Built with the Web Audio API so there's no audio file to upload or
+  // keep track of in /assets. Fails silently on browsers/contexts that
+  // block or don't support it (e.g. autoplay policies before any user
+  // gesture) -- the overlay still opens either way.
+  var toolsTapAudioCtx = null;
+  function playToolsTapSound(){
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!toolsTapAudioCtx) toolsTapAudioCtx = new AC();
+      if (toolsTapAudioCtx.state === 'suspended') toolsTapAudioCtx.resume();
+
+      var ctx = toolsTapAudioCtx;
+      var now = ctx.currentTime;
+
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.09);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.22, now + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.24);
+    } catch(e){ /* audio blocked/unsupported -- fail silently */ }
+  }
+
+  var serviceCards = document.querySelectorAll('.service-card[data-tools]');
+  serviceCards.forEach(function(card){
+    function handleOpen(){
+      playToolsTapSound();
+      openToolsOverlay(card.getAttribute('data-tools'));
+    }
+    card.addEventListener('click', handleOpen);
     card.addEventListener('keydown', function(e){
       if (e.key === 'Enter' || e.key === ' '){
         e.preventDefault();
-        goToFilteredProjects();
+        handleOpen();
       }
     });
+  });
+
+  if (toolsOverlayClose) toolsOverlayClose.addEventListener('click', closeToolsOverlay);
+  if (toolsOverlay){
+    toolsOverlay.addEventListener('click', function(e){
+      if (e.target === toolsOverlay) closeToolsOverlay();
+    });
+  }
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && toolsOverlay && toolsOverlay.classList.contains('is-open')) closeToolsOverlay();
   });
 
   // ---- "Others" collapsible: hidden until the person clicks the toggle ----
@@ -1795,8 +2096,16 @@
   })();
 
   // ---- 5) Scroll-in reveal animations ----
-  // Ease-in fade + rise applied to key blocks per section as they enter
-  // the viewport. Completely separate from, and doesn't alter, the
+  // Ease-in fade + rise applied to key blocks per section (About Me,
+  // Services, Projects, Contact) as they enter the viewport.
+  //
+  // Mobile (<=900px): reveal once and leave it -- keeps the phone
+  // layout calm since everything's already scaled down.
+  //
+  // Desktop (>900px): the animation replays every time -- each block
+  // fades/rises in when scrolled into view, and resets so it fades
+  // back out when scrolled past, whether the user is scrolling down
+  // or back up. Completely separate from, and doesn't alter, the
   // name-graphic shine effect handled above.
   (function(){
     var revealItems = document.querySelectorAll(
@@ -1810,11 +2119,22 @@
       return;
     }
 
+    function isDesktop(){ return window.innerWidth > 900; }
+
     var revealObserver = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
+        var el = entry.target;
         if (entry.isIntersecting){
-          entry.target.classList.add('in-view');
-          revealObserver.unobserve(entry.target);
+          el.classList.add('in-view');
+          // On mobile, once revealed stay revealed -- stop watching it.
+          if (!isDesktop()){
+            revealObserver.unobserve(el);
+          }
+        } else if (isDesktop()){
+          // On desktop, leaving the viewport resets it so the ease-in
+          // plays again next time it scrolls back into view (either
+          // direction).
+          el.classList.remove('in-view');
         }
       });
     }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
