@@ -1551,7 +1551,7 @@
           <p class="subcategory-title">3D Animation</p>
         </div>
         <div class="project-grid">
-          <div class="project-item" data-filename="Florencio_JM_EXR-FN-03_vFinalRender.mp4" data-title="Product Animation" data-date="2026" data-description="A product showcase animation focused on highlighting form and detail through smooth camera movement and lighting."></div>
+          <div class="project-item" data-filename="Florencio_JM_EXR-FN-03_vFinalRender.mp4" data-title="Product Animation" data-date="2026" data-description="A product showcase animation focused on highlighting form and detail through smooth camera movement and lighting.  Notes: The logo animation was owned or created by Fantech. This product showcase is for Academic purposes"></div>
         </div>
       </div>
     </div>
@@ -1743,15 +1743,7 @@
       });
 
       item.addEventListener('click', function(){
-        if (isTouchDevice && !item.classList.contains('info-active')){
-          // First tap on mobile just reveals the title/date + expand icon
-          document.querySelectorAll('.project-item.info-active').forEach(function(other){
-            if (other !== item) other.classList.remove('info-active');
-          });
-          item.classList.add('info-active');
-          return;
-        }
-        // Desktop click, or a second tap on mobile, enlarges the work
+        // One tap/click -- on any device -- opens the piece right away.
         openLightbox(filename, title, date, video, description);
       });
     }
