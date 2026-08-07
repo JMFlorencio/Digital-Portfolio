@@ -270,7 +270,6 @@
      touch the name-graphic hover/tap shine effect above. */
   .frame-card,
   .service-card,
-  .project-category,
   .contact-card,
   .section-heading,
   .services-intro,
@@ -281,7 +280,6 @@
   }
   .frame-card.in-view,
   .service-card.in-view,
-  .project-category.in-view,
   .contact-card.in-view,
   .section-heading.in-view,
   .services-intro.in-view,
@@ -290,7 +288,7 @@
     transform:translateY(0);
   }
   @media (prefers-reduced-motion: reduce){
-    .frame-card, .service-card, .project-category, .contact-card,
+    .frame-card, .service-card, .contact-card,
     .section-heading, .services-intro, .project-filters{
       opacity:1 !important; transform:none !important; transition:none !important;
     }
@@ -400,6 +398,23 @@
     text-transform:uppercase; color:var(--green-soft);
     margin:0 0 14px;
   }
+
+  /* Per-brand groupings inside "Graphic Design" (Arfix Studio, UC-SDO,
+     Hoyoma, SKIL, Fujima, Sailun, Beast Tyre, Bestlight). Each brand
+     gets its own label + masonry board so client work stays visually
+     separated even before real artwork replaces the placeholders. */
+  .brand-block + .brand-block{ margin-top:32px; }
+  .brand-title{
+    display:flex; align-items:center; gap:12px;
+    font-size:.74rem; font-weight:bold; letter-spacing:.1em;
+    text-transform:uppercase; color:rgba(234,255,243,0.72);
+    margin:0 0 14px;
+  }
+  .brand-title::after{
+    content:"";
+    flex:1; height:1px;
+    background:rgba(57,255,143,0.18);
+  }
   .subcategory-filters{ display:flex; flex-wrap:wrap; gap:10px; margin:0 0 22px; }
   .subfilter-btn{
     font-family:inherit; font-size:12px; font-weight:bold; letter-spacing:.02em;
@@ -413,6 +428,25 @@
   }
   .subfilter-btn:hover{ border-color:var(--green); }
   .subfilter-btn.active{ background:var(--green); color:#04140b; border-color:var(--green); }
+
+  /* Behance project embeds (Sports Development / Arfix Studio sub-blocks
+     inside "Others"). Wrap each <iframe> in this div. */
+  .behance-embed-row{ display:flex; flex-wrap:wrap; gap:22px; }
+  .behance-embed-wrap{
+    max-width:404px;
+    width:100%;
+    border-radius:14px;
+    overflow:hidden;
+    border:1px solid var(--panel-line);
+    box-shadow:0 8px 30px rgba(0,0,0,0.35);
+  }
+  .behance-embed-wrap iframe{
+    display:block;
+    width:100%;
+    aspect-ratio:404 / 316;
+    height:auto;
+    border:0;
+  }
 
   .hero-mid{
     display:flex; flex-direction:column; align-items:flex-end; gap:14px;
@@ -919,53 +953,37 @@
   .category-header img{ height:28px; width:auto; }
   .cat-line{ flex:1; height:1px; background:var(--panel-line); }
 
-  /* ---- "OTHERS" COLLAPSIBLE TOGGLE ----
-     Others is collapsed by default -- its content only shows once the
-     person clicks/taps this header. The little square icon rotates
-     into an "open" state (+ becomes x) when expanded. */
-  .others-toggle{
-    all:unset;
-    display:flex; align-items:center; gap:18px; margin-bottom:24px;
-    width:100%; cursor:pointer; box-sizing:border-box;
+  /* ---- PINTEREST-STYLE MASONRY GRID ----
+     Uses CSS multi-column layout instead of a fixed grid, so every item
+     keeps its own natural aspect ratio (tall posters stay tall, wide
+     shots stay wide) and packs tightly like a Pinterest board instead
+     of being cropped into uniform thumbnails. Column count narrows on
+     smaller screens via the media queries near the bottom of this file. */
+  .project-grid{
+    column-count:3;
+    column-gap:22px;
   }
-  .others-toggle-icon{
-    flex:none; width:28px; height:28px;
-    border:1.5px solid var(--green); border-radius:6px;
-    display:flex; align-items:center; justify-content:center;
-    color:var(--green);
-    transition:background .2s ease;
+  .project-item{
+    position:relative;
+    display:block;
+    width:100%;
+    margin:0 0 22px;
+    break-inside:avoid;
+    -webkit-column-break-inside:avoid;
+    border-radius:14px;
+    overflow:hidden;
+    cursor:pointer;
+    background:#0a120e;
   }
-  .others-toggle:hover .others-toggle-icon{ background:rgba(57,255,143,0.14); }
-  .others-toggle-icon svg{
-    width:14px; height:14px;
-    transition:transform .3s ease;
-  }
-  .others-toggle[aria-expanded="true"] .others-toggle-icon svg{ transform:rotate(45deg); }
-  .others-toggle:focus-visible .others-toggle-icon{ outline:2px solid var(--green); outline-offset:2px; }
+  .project-item img, .project-item video{ width:100%; height:auto; object-fit:cover; border-radius:14px; display:block; }
 
-  .others-content{
-    display:grid;
-    grid-template-rows:0fr;
-    transition:grid-template-rows .4s ease;
-  }
-  .others-content-inner{ overflow:hidden; min-height:0; }
-  .project-category[data-category="others"].is-open .others-content{
-    grid-template-rows:1fr;
-  }
-
-  .project-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; align-items:start; }
-  .project-item{ position:relative; aspect-ratio:16/9; border-radius:14px; overflow:hidden; cursor:pointer; background:#0a120e; }
-  .project-item img, .project-item video{ width:100%; height:100%; object-fit:cover; border-radius:14px; display:block; }
-
-  /* ---- POSTER FRAMES ----
-     Posters are tall/portrait, not widescreen, so the default 16:9
-     frame above was cropping them badly. This gives poster items a
-     portrait frame instead and shows the full artwork (no cropping).
-     Adjust the aspect-ratio below if your posters are a different
-     proportion (e.g. 2/3 for a taller poster, 1/1 for a square one). */
-  .project-item[data-subcategory="poster"]{ aspect-ratio:3/4; }
-  .project-item[data-subcategory="poster"] img,
-  .project-item[data-subcategory="poster"] video{ object-fit:contain; position:relative; z-index:1; }
+  /* Placeholder tiles (no media added yet) don't have an intrinsic
+     image size to drive their height, so give them a few varied
+     proportions in rotation -- keeps an empty board from looking like
+     a flat row of identical boxes and still reads as "Pinterest". */
+  .project-item:nth-child(3n+1) .project-placeholder{ aspect-ratio:3/4; }
+  .project-item:nth-child(3n+2) .project-placeholder{ aspect-ratio:1/1; }
+  .project-item:nth-child(3n+3) .project-placeholder{ aspect-ratio:4/5; }
 
   /* ---- POSTER BACKDROP (Instagram / FB Stories style) ----
      Fills the empty space left/right of a "contain"-fit poster with a
@@ -1054,6 +1072,8 @@
   }
   .lightbox.active .lightbox-inner{ opacity:1; transform:translateY(0) scale(1); }
   .lightbox-media{ position:relative; line-height:0; background:#000; border-radius:20px 20px 0 0; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .lightbox-track{ display:flex; width:100%; transition:transform .32s ease; touch-action:pan-y; }
+  .lightbox-slide{ flex:0 0 100%; max-width:100%; display:flex; align-items:center; justify-content:center; }
   .lightbox-inner img, .lightbox-inner video{
     max-width:100%; max-height:64vh; width:auto; height:auto;
     object-fit:contain;
@@ -1135,7 +1155,7 @@
   }
 
   .project-placeholder{
-    width:100%; height:100%;
+    width:100%; aspect-ratio:3/4;
     border:1px dashed var(--panel-line);
     border-radius:14px;
     display:flex; align-items:center; justify-content:center;
@@ -1191,7 +1211,11 @@
     .filter-btn{ font-size:12px; padding:9px 18px; }
     .project-categories{ padding:28px 20px 40px; gap:44px; }
     .category-header img{ height:20px; }
-    .project-grid{ grid-template-columns:1fr; gap:16px; }
+    .project-grid{ column-count:2; column-gap:16px; }
+    .project-item{ margin-bottom:16px; }
+  }
+  @media (max-width:560px){
+    .project-grid{ column-count:1; }
   }
 
   /* ---------------- PRELOADER ---------------- */
@@ -1484,7 +1508,7 @@
     <button class="filter-btn" data-filter="scene-design">Scene Design</button>
     <button class="filter-btn" data-filter="logo-illustrations">Logo Illustrations</button>
     <button class="filter-btn" data-filter="motion-graphics">Animation</button>
-    <button class="filter-btn" data-filter="others">Others</button>
+    <button class="filter-btn" data-filter="graphic-design">Graphic Design</button>
   </div>
 
   <div class="project-categories" id="projectCategories">
@@ -1551,40 +1575,150 @@
           <p class="subcategory-title">3D Animation</p>
         </div>
         <div class="project-grid">
-          <div class="project-item" data-filename="Florencio_JM_EXR-FN-03_vFinalRender.mp4" data-title="Product Animation" data-date="2026" data-description="A product showcase animation focused on highlighting form and detail through smooth camera movement and lighting.  Notes: The logo animation was owned or created by Fantech. This product showcase is for Academic purposes"></div>
+          <div class="project-item" data-filename="Florencio_JM_EXR-FN-03_vFinalRender.mp4" data-title="Product Animation" data-date="2026" data-description="A product showcase animation focused on highlighting form and detail through smooth camera movement and lighting."></div>
         </div>
       </div>
     </div>
 
-    <div class="project-category" data-category="others">
-      <button type="button" class="others-toggle" id="othersToggle" aria-expanded="false" aria-controls="othersContent">
-        <span class="others-toggle-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        </span>
-        <span class="category-heading-text">Others</span>
+    <!-- ============ GRAPHIC DESIGN, GROUPED BY BRAND ============
+         Its own top-level category (same as Scene Design / Logo
+         Illustrations / Animation above it) instead of being tucked
+         under a collapsible "Others". Each brand is its own masonry
+         board. The four items that already had real files keep their
+         filenames so the artwork still loads. Every other tile is a
+         placeholder -- drop a file named exactly like its data-filename
+         into /assets (e.g. "Hoyoma 2.png") and it will swap in
+         automatically, same as the rest of the site. -->
+    <div class="project-category" data-category="graphic-design">
+      <div class="category-header">
+        <span class="category-heading-text">Graphic Design</span>
         <span class="cat-line"></span>
-      </button>
+      </div>
 
-      <div class="others-content" id="othersContent">
-        <div class="others-content-inner">
+      <div class="brand-block" data-brand="arfix-studio">
+        <p class="brand-title">Arfix Studio</p>
+        <div class="subcategory-filters" data-subfilter-group="arfix-studio">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="mockups">Mockups</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Booth Mockup.webp" data-title="Arfix Studio Booth Mockup" data-date="2025" data-subcategory="mockups" data-description="A realistic mockup presentation of a warmer jacket design made for UC-SDO, used to preview the print/embroidery placement before production."></div>
+          <div class="project-item" data-filenames="Trifold brochure.webp, Trifold brochure Content.webp" data-title="Arfix Studio Design" data-date="2026" 
+		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
+		  <div class="project-item" data-filenames="Services.webp, Mission Vision.webp" data-title="Arfix Studio Design" data-date="2026" 
+		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
+          <div class="project-item" data-filename="Podcast Banner.webp" data-title="Arfix Studio Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
+		   <div class="project-item" data-filenames="IP1.png, IP2.png, IP3.png" data-title="Arfix Studio Design" data-date="2026" 
+		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
+        </div>
+      </div>
 
-          <div class="subcategory-block" data-subcat-group="graphic-design">
-            <div class="subcategory-header">
-              <p class="subcategory-title">Graphic Design</p>
-            </div>
-            <div class="subcategory-filters" data-subfilter-group="graphic-design">
-              <button class="subfilter-btn active" data-subfilter="all">All</button>
-              <button class="subfilter-btn" data-subfilter="poster">Poster</button>
-              <button class="subfilter-btn" data-subfilter="mockup">Mockup</button>
-            </div>
-            <div class="project-grid">
-              <div class="project-item" data-filename="Sports Graphic.png" data-title="Event Poster Design" data-date="2025" data-subcategory="poster" data-description="A sports event poster designed to grab attention fast, using bold type and high-energy graphics suited for print and social media."></div>
-              <div class="project-item" data-filename="Ecomposter.png" data-title="Ecommerce Poster Design" data-date="2022" data-subcategory="poster" data-description="A promotional poster created for an e-commerce campaign, laid out to highlight the product and offer at a glance."></div>
-              <div class="project-item" data-filename="ArfixStudio_Mockup warmer.png" data-title="UC-SDO Warmer Jacket Mockup" data-date="2025" data-subcategory="mockup" data-description="A realistic mockup presentation of a warmer jacket design made for UC-SDO, used to preview the print/embroidery placement before production."></div>
-              <div class="project-item" data-filename="PRISAA POLO.jpg" data-title="PRISAA Polo Shirt Mockup" data-date="2026" data-subcategory="mockup" data-description="A polo shirt mockup created for PRISAA, showcasing the design layout and colorway ahead of the actual print run."></div>
-            </div>
-          </div>
+      <div class="brand-block" data-brand="uc-sdo">
+        <p class="brand-title">UC-Sports Development Office</p>
+        <div class="subcategory-filters" data-subfilter-group="uc-sdo">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="social-media-poster">Social Media Poster</button>
+          <button class="subfilter-btn" data-subfilter="mockups">Mockups</button>
+          <button class="subfilter-btn" data-subfilter="intramural-banners">Intramural Banners</button>
+          <button class="subfilter-btn" data-subfilter="videos">Videos</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Sports Graphic.png" data-title="Event Poster Design" data-date="2025" data-subcategory="social-media-poster" data-description="A sports event poster designed to grab attention fast, using bold type and high-energy graphics suited for print and social media."></div>
+          <div class="project-item" data-filename="P1.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="social-media-poster" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="Tryout.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="Womens Athletics.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="PRISAA POLO.jpg" data-title="PRISAA Polo Shirt Mockup" data-date="2026" data-subcategory="mockups" data-description="A polo shirt mockup created for PRISAA, showcasing the design layout and colorway ahead of the actual print run."></div>
+          <div class="project-item" data-filename="Warmer_Mockup1.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="Warmer_Mockuo_Wht.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="Warmer_Mockuo_BLK.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="UC-SDO Video 1.mp4" data-title="UC-SDO Design" data-date="2026" data-subcategory="videos" data-description="Placeholder -- add more UC-Sports Development Office videos here."></div>
+        </div>
+      </div>
 
+      <div class="brand-block" data-brand="hoyoma">
+        <p class="brand-title">Hoyoma</p>
+        <div class="subcategory-filters" data-subfilter-group="hoyoma">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Hoyoma 1.png" data-title="Hoyoma Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Hoyoma artwork here."></div>
+          <div class="project-item" data-filename="Hoyoma 2.png" data-title="Hoyoma Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Hoyoma artwork here."></div>
+          <div class="project-item" data-filename="Hoyoma 3.png" data-title="Hoyoma Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Hoyoma artwork here."></div>
+          <div class="project-item" data-filename="Hoyoma 4.png" data-title="Hoyoma Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Hoyoma artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="skil">
+        <p class="brand-title">SKIL</p>
+        <div class="subcategory-filters" data-subfilter-group="skil">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="SKIL 1.png" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL 2.png" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL 3.png" data-title="SKIL Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL 4.png" data-title="SKIL Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add SKIL artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="fujima">
+        <p class="brand-title">Fujima</p>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Fujima 1.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
+          <div class="project-item" data-filename="Fujima 2.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
+          <div class="project-item" data-filename="Fujima 3.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
+          <div class="project-item" data-filename="Fujima 4.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="sailun">
+        <p class="brand-title">Sailun</p>
+        <div class="subcategory-filters" data-subfilter-group="sailun">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Sailun 1.png" data-title="Sailun Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Sailun artwork here."></div>
+          <div class="project-item" data-filename="Sailun 2.png" data-title="Sailun Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Sailun artwork here."></div>
+          <div class="project-item" data-filename="Sailun 3.png" data-title="Sailun Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Sailun artwork here."></div>
+          <div class="project-item" data-filename="Sailun 4.png" data-title="Sailun Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Sailun artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="beast-tyre">
+        <p class="brand-title">Beast Tyre</p>
+        <div class="subcategory-filters" data-subfilter-group="beast-tyre">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Beast Tyre 1.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Beast Tyre artwork here."></div>
+          <div class="project-item" data-filename="Beast Tyre 2.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Beast Tyre artwork here."></div>
+          <div class="project-item" data-filename="Beast Tyre 3.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Beast Tyre artwork here."></div>
+          <div class="project-item" data-filename="Beast Tyre 4.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Beast Tyre artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="bestlight">
+        <p class="brand-title">Bestlight</p>
+        <div class="subcategory-filters" data-subfilter-group="bestlight">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Bestlight 1.png" data-title="Bestlight Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Bestlight artwork here."></div>
+          <div class="project-item" data-filename="Bestlight 2.png" data-title="Bestlight Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Bestlight artwork here."></div>
+          <div class="project-item" data-filename="Bestlight 3.png" data-title="Bestlight Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Bestlight artwork here."></div>
+          <div class="project-item" data-filename="Bestlight 4.png" data-title="Bestlight Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Bestlight artwork here."></div>
         </div>
       </div>
     </div>
@@ -1642,11 +1776,18 @@
 <div class="lightbox" id="workLightbox">
   <div class="lightbox-inner">
     <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+    <button class="lightbox-arrow prev" id="lightboxPrev" aria-label="Previous image" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="lightbox-arrow next" id="lightboxNext" aria-label="Next image" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
     <div class="lightbox-media" id="lightboxMedia"></div>
     <div class="lightbox-caption">
       <div class="work-title" id="lightboxTitle"></div>
       <div class="work-date" id="lightboxDate"></div>
       <p class="lightbox-description" id="lightboxDescription"></p>
+      <div class="lightbox-dots" id="lightboxDots" style="display:none;"></div>
     </div>
   </div>
 </div>
@@ -1685,8 +1826,16 @@
   // GIF/animation, or video). Until then, a placeholder shows which
   // filename to add. Hovering (desktop) or tapping (mobile) reveals the
   // title + date, and the work can be enlarged in a lightbox. ----
-  document.querySelectorAll('.project-item[data-filename]').forEach(function(item){
-    var filename = item.getAttribute('data-filename');
+  document.querySelectorAll('.project-item[data-filename], .project-item[data-filenames]').forEach(function(item){
+    // data-filenames="a.webp, b.webp" lets one tile hold multiple sub-images
+    // (e.g. the front/back of a brochure). If it's not set, we fall back to
+    // the single data-filename -- those tiles behave exactly as before,
+    // with no swipe/arrow/dot UI in the lightbox.
+    var filenamesAttr = item.getAttribute('data-filenames');
+    var images = filenamesAttr
+      ? filenamesAttr.split(',').map(function(s){ return s.trim(); }).filter(Boolean)
+      : [item.getAttribute('data-filename')];
+    var filename = images[0]; // used for the grid thumbnail
     var title = item.getAttribute('data-title') || filename;
     var date = item.getAttribute('data-date') || '';
     var description = item.getAttribute('data-description') || '';
@@ -1739,12 +1888,12 @@
 
       expand.addEventListener('click', function(e){
         e.stopPropagation();
-        openLightbox(filename, title, date, video, description);
+        openLightbox(images, title, date, video, description);
       });
 
       item.addEventListener('click', function(){
         // One tap/click -- on any device -- opens the piece right away.
-        openLightbox(filename, title, date, video, description);
+        openLightbox(images, title, date, video, description);
       });
     }
 
@@ -1773,18 +1922,65 @@
   var lightboxDate = document.getElementById('lightboxDate');
   var lightboxDescription = document.getElementById('lightboxDescription');
   var lightboxClose = document.getElementById('lightboxClose');
+  var lightboxPrev = document.getElementById('lightboxPrev');
+  var lightboxNext = document.getElementById('lightboxNext');
+  var lightboxDots = document.getElementById('lightboxDots');
 
-  function openLightbox(filename, title, date, isVideo, description){
+  var currentImages = [];
+  var currentIsVideo = false;
+  var currentSlide = 0;
+  var lightboxTrack = null;
+
+  function openLightbox(images, title, date, isVideo, description){
+    currentImages = images;
+    currentIsVideo = isVideo;
+    currentSlide = 0;
+
     lightboxMedia.innerHTML = '';
-    var media = document.createElement(isVideo ? 'video' : 'img');
-    media.src = 'assets/' + filename;
-    media.alt = title;
+    var track = document.createElement('div');
+    track.className = 'lightbox-track';
+
+    images.forEach(function(filename){
+      var slide = document.createElement('div');
+      slide.className = 'lightbox-slide';
+      var media = document.createElement(isVideo ? 'video' : 'img');
+      media.src = 'assets/' + filename;
+      media.alt = title;
+      if (isVideo){
+        media.controls = true;
+        media.playsInline = true;
+      }
+      slide.appendChild(media);
+      track.appendChild(slide);
+    });
+    lightboxMedia.appendChild(track);
+    lightboxTrack = track;
+
+    // First slide only should autoplay if it's a video.
     if (isVideo){
-      media.controls = true;
-      media.autoplay = true;
-      media.playsInline = true;
+      var firstMedia = track.querySelector('video');
+      if (firstMedia) firstMedia.autoplay = true;
     }
-    lightboxMedia.appendChild(media);
+
+    var multi = images.length > 1;
+    lightboxPrev.style.display = multi ? '' : 'none';
+    lightboxNext.style.display = multi ? '' : 'none';
+    lightboxDots.style.display = multi ? '' : 'none';
+    lightboxDots.innerHTML = '';
+    if (multi){
+      images.forEach(function(_, i){
+        var dot = document.createElement('button');
+        dot.className = 'lightbox-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to image ' + (i + 1));
+        dot.addEventListener('click', function(e){
+          e.stopPropagation();
+          goToSlide(i);
+        });
+        lightboxDots.appendChild(dot);
+      });
+    }
+    updateSlidePosition();
+
     lightboxTitle.textContent = title;
     lightboxDate.textContent = date;
     lightboxDescription.textContent = description || '';
@@ -1792,17 +1988,71 @@
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
+
+  function updateSlidePosition(){
+    if (!lightboxTrack) return;
+    lightboxTrack.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+    var dots = lightboxDots.querySelectorAll('.lightbox-dot');
+    dots.forEach(function(d, i){ d.classList.toggle('active', i === currentSlide); });
+    // Pause any video that's swiped out of view so audio doesn't keep playing.
+    var slides = lightboxTrack.querySelectorAll('.lightbox-slide');
+    slides.forEach(function(slide, i){
+      var vid = slide.querySelector('video');
+      if (vid && i !== currentSlide) vid.pause();
+    });
+  }
+
+  function goToSlide(i){
+    if (!currentImages.length) return;
+    currentSlide = (i + currentImages.length) % currentImages.length;
+    updateSlidePosition();
+  }
+
+  lightboxPrev.addEventListener('click', function(e){
+    e.stopPropagation();
+    goToSlide(currentSlide - 1);
+  });
+  lightboxNext.addEventListener('click', function(e){
+    e.stopPropagation();
+    goToSlide(currentSlide + 1);
+  });
+
+  // ---- Swipe gesture (touch) -- only meaningful with 2+ images ----
+  var touchStartX = null;
+  var touchStartY = null;
+  lightboxMedia.addEventListener('touchstart', function(e){
+    if (currentImages.length < 2) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  lightboxMedia.addEventListener('touchend', function(e){
+    if (touchStartX === null || currentImages.length < 2) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    // Ignore mostly-vertical drags so scrolling still works normally.
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){
+      goToSlide(currentSlide + (dx < 0 ? 1 : -1));
+    }
+    touchStartX = null;
+    touchStartY = null;
+  }, { passive: true });
+
   function closeLightbox(){
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
     lightboxMedia.innerHTML = ''; // stop any playing video
+    lightboxTrack = null;
+    currentImages = [];
   }
   lightboxClose.addEventListener('click', closeLightbox);
   lightbox.addEventListener('click', function(e){
     if (e.target === lightbox) closeLightbox();
   });
   document.addEventListener('keydown', function(e){
+    if (!lightbox.classList.contains('active')) return;
     if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft' && currentImages.length > 1) goToSlide(currentSlide - 1);
+    if (e.key === 'ArrowRight' && currentImages.length > 1) goToSlide(currentSlide + 1);
   });
 
   // ---- Project filter buttons: show only the selected category, or everything for "All" ----
@@ -1958,20 +2208,11 @@
     if (e.key === 'Escape' && toolsOverlay && toolsOverlay.classList.contains('is-open')) closeToolsOverlay();
   });
 
-  // ---- "Others" collapsible: hidden until the person clicks the toggle ----
-  var othersToggle = document.getElementById('othersToggle');
-  if (othersToggle){
-    othersToggle.addEventListener('click', function(){
-      var isOpen = othersToggle.closest('.project-category').classList.toggle('is-open');
-      othersToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-  }
-
-  // ---- Sub-filters (e.g. "Others" > Graphic Design > Poster / Mockup) ----
+  // ---- Sub-filters (e.g. Graphic Design > Poster / Mockup, if ever added) ----
   // Scoped per subcategory-block so multiple sub-filter groups can coexist.
   document.querySelectorAll('.subcategory-filters').forEach(function(group){
     var subButtons = group.querySelectorAll('.subfilter-btn');
-    var block = group.closest('.subcategory-block');
+    var block = group.closest('.brand-block, .subcategory-block');
     var grid = block ? block.querySelector('.project-grid') : null;
     if (!grid) return;
     var subItems = grid.querySelectorAll('.project-item');
@@ -2141,7 +2382,7 @@
   // name-graphic shine effect handled above.
   (function(){
     var revealItems = document.querySelectorAll(
-      '.frame-card, .service-card, .project-category, .contact-card, .section-heading, .services-intro, .project-filters'
+      '.frame-card, .service-card, .contact-card, .section-heading, .services-intro, .project-filters'
     );
     if (!revealItems.length) return;
 
