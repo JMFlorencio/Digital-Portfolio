@@ -985,19 +985,6 @@
   .project-item:nth-child(3n+2) .project-placeholder{ aspect-ratio:1/1; }
   .project-item:nth-child(3n+3) .project-placeholder{ aspect-ratio:4/5; }
 
-  /* ---- POSTER BACKDROP (Instagram / FB Stories style) ----
-     Fills the empty space left/right of a "contain"-fit poster with a
-     blurred, darkened copy of the same image, so it looks like the
-     poster's own colors are casting onto the background instead of
-     plain empty bars. Pure CSS, generated per-item in the JS below. */
-  .poster-backdrop{
-    position:absolute; inset:-20px; z-index:0;
-    background-size:cover; background-position:center;
-    filter:blur(28px) saturate(1.4) brightness(0.55);
-    transform:scale(1.15);
-    pointer-events:none;
-  }
-
   /* Info overlay: title + date. Appears on hover (desktop) or tap (mobile) */
   .work-overlay{
     position:absolute; inset:0; z-index:2;
@@ -1071,6 +1058,7 @@
     transition:opacity .28s ease, transform .28s ease;
   }
   .lightbox.active .lightbox-inner{ opacity:1; transform:translateY(0) scale(1); }
+  .lightbox-media-wrap{ position:relative; }
   .lightbox-media{ position:relative; line-height:0; background:#000; border-radius:20px 20px 0 0; overflow:hidden; display:flex; align-items:center; justify-content:center; }
   .lightbox-track{ display:flex; width:100%; transition:transform .32s ease; touch-action:pan-y; }
   .lightbox-slide{ flex:0 0 100%; max-width:100%; display:flex; align-items:center; justify-content:center; }
@@ -1134,8 +1122,8 @@
     z-index:2;
   }
   .lightbox-arrow:hover{ border-color:var(--green); color:var(--green); background:rgba(2,10,6,0.85); }
-  .lightbox-arrow.prev{ left:-16px; }
-  .lightbox-arrow.next{ right:-16px; }
+  .lightbox-arrow.prev{ left:12px; }
+  .lightbox-arrow.next{ right:12px; }
   .lightbox-arrow svg{ width:18px; height:18px; }
 
   .lightbox-dots{ display:flex; justify-content:center; gap:8px; margin-top:18px; }
@@ -1150,8 +1138,8 @@
     .lightbox-inner{ max-width:96vw; }
     .lightbox-caption{ padding:22px 22px 26px; }
     .lightbox-arrow{ width:36px; height:36px; }
-    .lightbox-arrow.prev{ left:-6px; }
-    .lightbox-arrow.next{ right:-6px; }
+    .lightbox-arrow.prev{ left:8px; }
+    .lightbox-arrow.next{ right:8px; }
   }
 
   .project-placeholder{
@@ -1505,13 +1493,160 @@
 
   <div class="project-filters" id="projectFilters">
     <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="graphic-design">Graphic Design</button>
     <button class="filter-btn" data-filter="scene-design">Scene Design</button>
     <button class="filter-btn" data-filter="logo-illustrations">Logo Illustrations</button>
     <button class="filter-btn" data-filter="motion-graphics">Animation</button>
-    <button class="filter-btn" data-filter="graphic-design">Graphic Design</button>
   </div>
 
   <div class="project-categories" id="projectCategories">
+
+    <!-- ============ GRAPHIC DESIGN, GROUPED BY BRAND ============
+         Its own top-level category (same as Scene Design / Logo
+         Illustrations / Animation above it) instead of being tucked
+         under a collapsible "Others". Each brand is its own masonry
+         board. The four items that already had real files keep their
+         filenames so the artwork still loads. Every other tile is a
+         placeholder -- drop a file named exactly like its data-filename
+         into /assets (e.g. "Hoyoma 2.png") and it will swap in
+         automatically, same as the rest of the site. -->
+    <div class="project-category" data-category="graphic-design">
+      <div class="category-header">
+        <span class="category-heading-text">Graphic Design</span>
+        <span class="cat-line"></span>
+      </div>
+
+    <div class="brand-block" data-brand="arfix-studio">
+        <p class="brand-title">Arfix Studio</p>
+        <div class="subcategory-filters" data-subfilter-group="arfix-studio">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="mockups">Mockups</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Booth Mockup.webp" data-title="Arfix Studio Booth Mockup" data-date="2025" data-subcategory="mockups" data-description="A realistic mockup presentation of a warmer jacket design made for UC-SDO, used to preview the print/embroidery placement before production."></div>
+          <div class="project-item" data-filenames="Trifold brochure.webp, Trifold brochure Content.webp" data-title="Arfix Studio Design" data-date="2026" 
+		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
+		  <div class="project-item" data-filenames="Services.webp, Mission Vision.webp" data-title="Arfix Studio Design" data-date="2026" 
+		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
+          <div class="project-item" data-filename="Podcast Banner.webp" data-title="Arfix Studio Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
+		   <div class="project-item" data-filenames="IP1.png, IP2.png, IP3.png" data-title="Arfix Studio Design" data-date="2026" 
+		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="uc-sdo">
+        <p class="brand-title">UC-Sports Development Office</p>
+        <div class="subcategory-filters" data-subfilter-group="uc-sdo">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="social-media-poster">Social Media Poster</button>
+          <button class="subfilter-btn" data-subfilter="mockups">Mockups</button>
+		  <button class="subfilter-btn" data-subfilter="flags">flags</button>
+          <button class="subfilter-btn" data-subfilter="intramural-banners">Intramural Banners</button>
+          <button class="subfilter-btn" data-subfilter="videos">Videos</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Sports Graphic.png" data-title="Event Poster Design" data-date="2025" data-subcategory="social-media-poster" data-description="A sports event poster designed to grab attention fast, using bold type and high-energy graphics suited for print and social media."></div>
+          <div class="project-item" data-filename="P1.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="social-media-poster" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="Tryout.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+		     <div class="project-item" data-filename="UC BANNER 2025.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="Womens Athletics.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="PRISAA POLO.jpg" data-title="PRISAA Polo Shirt Mockup" data-date="2026" data-subcategory="mockups" data-description="A polo shirt mockup created for PRISAA, showcasing the design layout and colorway ahead of the actual print run."></div>
+          <div class="project-item" data-filename="Warmer_Mockup1.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="Warmer_Mockuo_Wht.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="Warmer_Mockuo_BLK.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filename="UC-SDO Video 1.mp4" data-title="UC-SDO Design" data-date="2026" data-subcategory="videos" data-description="Placeholder -- add more UC-Sports Development Office videos here."></div>
+		  <div class="project-item" data-filenames="CAFA.jpg, CAS.jpg,CITCS.jpg, COA.jpg, COE.jpg, COL.jpg" data-title="Intramural Sports Event Flags" data-date="2025" data-subcategory="flags" data-description="Placeholder -- add a description for the CITCS, COA, and COE flags here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="hoyoma">
+        <p class="brand-title">Hoyoma</p>
+        <div class="subcategory-filters" data-subfilter-group="hoyoma">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Hoyoma p1.webp" data-title="Hoyoma Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Hoyoma artwork here."></div>
+          <div class="project-item" data-filename="Hoyoma p2.webp" data-title="Hoyoma Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Hoyoma artwork here."></div>
+		   <div class="project-item" data-filename="Hoyoma p3.webp" data-title="Hoyoma Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Hoyoma artwork here."></div>
+          <div class="project-item" data-filename="Hoyoma p4.webp" data-title="Hoyoma Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Hoyoma artwork here."></div>
+          <div class="project-item" data-filename="Hoyoma p5.webp" data-title="Hoyoma Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Hoyoma artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="skil">
+        <p class="brand-title">SKIL</p>
+        <div class="subcategory-filters" data-subfilter-group="skil">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="SKIL 1.png" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL 2.png" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL 3.png" data-title="SKIL Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL 4.png" data-title="SKIL Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add SKIL artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="fujima">
+        <p class="brand-title">Fujima</p>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Fujima 1.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
+          <div class="project-item" data-filename="Fujima 2.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
+          <div class="project-item" data-filename="Fujima 3.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
+          <div class="project-item" data-filename="Fujima 4.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="sailun">
+        <p class="brand-title">Sailun</p>
+        <div class="subcategory-filters" data-subfilter-group="sailun">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Sailun p1.webp" data-title="Sailun Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Sailun artwork here."></div>
+          <div class="project-item" data-filename="Sailun p2.webp" data-title="Sailun Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Sailun artwork here."></div>
+          <div class="project-item" data-filename="Sailun p3.webp" data-title="Sailun Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Sailun artwork here."></div>
+          <div class="project-item" data-filename="Sailun p4.webp" data-title="Sailun Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Sailun artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="beast-tyre">
+        <p class="brand-title">Beast Tyre</p>
+        <div class="subcategory-filters" data-subfilter-group="beast-tyre">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Beast Tyre 1.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Beast Tyre artwork here."></div>
+          <div class="project-item" data-filename="Beast Tyre 2.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Beast Tyre artwork here."></div>
+          <div class="project-item" data-filename="Beast Tyre 3.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Beast Tyre artwork here."></div>
+          <div class="project-item" data-filename="Beast Tyre 4.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Beast Tyre artwork here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="bestlight">
+        <p class="brand-title">Bestlight</p>
+        <div class="subcategory-filters" data-subfilter-group="bestlight">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
+          <button class="subfilter-btn" data-subfilter="others">Others</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Bestlight 1.png" data-title="Bestlight Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Bestlight artwork here."></div>
+          <div class="project-item" data-filename="Bestlight 2.png" data-title="Bestlight Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Bestlight artwork here."></div>
+          <div class="project-item" data-filename="Bestlight 3.png" data-title="Bestlight Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Bestlight artwork here."></div>
+          <div class="project-item" data-filename="Bestlight 4.png" data-title="Bestlight Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Bestlight artwork here."></div>
+        </div>
+      </div>
+    </div>
 
     <div class="project-category" data-category="scene-design">
       <div class="category-header">
@@ -1580,149 +1715,6 @@
       </div>
     </div>
 
-    <!-- ============ GRAPHIC DESIGN, GROUPED BY BRAND ============
-         Its own top-level category (same as Scene Design / Logo
-         Illustrations / Animation above it) instead of being tucked
-         under a collapsible "Others". Each brand is its own masonry
-         board. The four items that already had real files keep their
-         filenames so the artwork still loads. Every other tile is a
-         placeholder -- drop a file named exactly like its data-filename
-         into /assets (e.g. "Hoyoma 2.png") and it will swap in
-         automatically, same as the rest of the site. -->
-    <div class="project-category" data-category="graphic-design">
-      <div class="category-header">
-        <span class="category-heading-text">Graphic Design</span>
-        <span class="cat-line"></span>
-      </div>
-
-      <div class="brand-block" data-brand="arfix-studio">
-        <p class="brand-title">Arfix Studio</p>
-        <div class="subcategory-filters" data-subfilter-group="arfix-studio">
-          <button class="subfilter-btn active" data-subfilter="all">All</button>
-          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
-          <button class="subfilter-btn" data-subfilter="mockups">Mockups</button>
-          <button class="subfilter-btn" data-subfilter="others">Others</button>
-        </div>
-        <div class="project-grid">
-          <div class="project-item" data-filename="Booth Mockup.webp" data-title="Arfix Studio Booth Mockup" data-date="2025" data-subcategory="mockups" data-description="A realistic mockup presentation of a warmer jacket design made for UC-SDO, used to preview the print/embroidery placement before production."></div>
-          <div class="project-item" data-filenames="Trifold brochure.webp, Trifold brochure Content.webp" data-title="Arfix Studio Design" data-date="2026" 
-		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
-		  <div class="project-item" data-filenames="Services.webp, Mission Vision.webp" data-title="Arfix Studio Design" data-date="2026" 
-		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
-          <div class="project-item" data-filename="Podcast Banner.webp" data-title="Arfix Studio Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
-		   <div class="project-item" data-filenames="IP1.png, IP2.png, IP3.png" data-title="Arfix Studio Design" data-date="2026" 
-		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
-        </div>
-      </div>
-
-      <div class="brand-block" data-brand="uc-sdo">
-        <p class="brand-title">UC-Sports Development Office</p>
-        <div class="subcategory-filters" data-subfilter-group="uc-sdo">
-          <button class="subfilter-btn active" data-subfilter="all">All</button>
-          <button class="subfilter-btn" data-subfilter="social-media-poster">Social Media Poster</button>
-          <button class="subfilter-btn" data-subfilter="mockups">Mockups</button>
-          <button class="subfilter-btn" data-subfilter="intramural-banners">Intramural Banners</button>
-          <button class="subfilter-btn" data-subfilter="videos">Videos</button>
-        </div>
-        <div class="project-grid">
-          <div class="project-item" data-filename="Sports Graphic.png" data-title="Event Poster Design" data-date="2025" data-subcategory="social-media-poster" data-description="A sports event poster designed to grab attention fast, using bold type and high-energy graphics suited for print and social media."></div>
-          <div class="project-item" data-filename="P1.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="social-media-poster" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-          <div class="project-item" data-filename="Tryout.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-          <div class="project-item" data-filename="Womens Athletics.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-          <div class="project-item" data-filename="PRISAA POLO.jpg" data-title="PRISAA Polo Shirt Mockup" data-date="2026" data-subcategory="mockups" data-description="A polo shirt mockup created for PRISAA, showcasing the design layout and colorway ahead of the actual print run."></div>
-          <div class="project-item" data-filename="Warmer_Mockup1.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-          <div class="project-item" data-filename="Warmer_Mockuo_Wht.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-          <div class="project-item" data-filename="Warmer_Mockuo_BLK.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-          <div class="project-item" data-filename="UC-SDO Video 1.mp4" data-title="UC-SDO Design" data-date="2026" data-subcategory="videos" data-description="Placeholder -- add more UC-Sports Development Office videos here."></div>
-        </div>
-      </div>
-
-      <div class="brand-block" data-brand="hoyoma">
-        <p class="brand-title">Hoyoma</p>
-        <div class="subcategory-filters" data-subfilter-group="hoyoma">
-          <button class="subfilter-btn active" data-subfilter="all">All</button>
-          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
-          <button class="subfilter-btn" data-subfilter="others">Others</button>
-        </div>
-        <div class="project-grid">
-          <div class="project-item" data-filename="Hoyoma 1.png" data-title="Hoyoma Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Hoyoma artwork here."></div>
-          <div class="project-item" data-filename="Hoyoma 2.png" data-title="Hoyoma Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Hoyoma artwork here."></div>
-          <div class="project-item" data-filename="Hoyoma 3.png" data-title="Hoyoma Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Hoyoma artwork here."></div>
-          <div class="project-item" data-filename="Hoyoma 4.png" data-title="Hoyoma Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Hoyoma artwork here."></div>
-        </div>
-      </div>
-
-      <div class="brand-block" data-brand="skil">
-        <p class="brand-title">SKIL</p>
-        <div class="subcategory-filters" data-subfilter-group="skil">
-          <button class="subfilter-btn active" data-subfilter="all">All</button>
-          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
-          <button class="subfilter-btn" data-subfilter="others">Others</button>
-        </div>
-        <div class="project-grid">
-          <div class="project-item" data-filename="SKIL 1.png" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
-          <div class="project-item" data-filename="SKIL 2.png" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
-          <div class="project-item" data-filename="SKIL 3.png" data-title="SKIL Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add SKIL artwork here."></div>
-          <div class="project-item" data-filename="SKIL 4.png" data-title="SKIL Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add SKIL artwork here."></div>
-        </div>
-      </div>
-
-      <div class="brand-block" data-brand="fujima">
-        <p class="brand-title">Fujima</p>
-        <div class="project-grid">
-          <div class="project-item" data-filename="Fujima 1.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
-          <div class="project-item" data-filename="Fujima 2.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
-          <div class="project-item" data-filename="Fujima 3.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
-          <div class="project-item" data-filename="Fujima 4.png" data-title="Fujima Design" data-date="2026" data-description="Placeholder -- add Fujima artwork here."></div>
-        </div>
-      </div>
-
-      <div class="brand-block" data-brand="sailun">
-        <p class="brand-title">Sailun</p>
-        <div class="subcategory-filters" data-subfilter-group="sailun">
-          <button class="subfilter-btn active" data-subfilter="all">All</button>
-          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
-          <button class="subfilter-btn" data-subfilter="others">Others</button>
-        </div>
-        <div class="project-grid">
-          <div class="project-item" data-filename="Sailun 1.png" data-title="Sailun Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Sailun artwork here."></div>
-          <div class="project-item" data-filename="Sailun 2.png" data-title="Sailun Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Sailun artwork here."></div>
-          <div class="project-item" data-filename="Sailun 3.png" data-title="Sailun Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Sailun artwork here."></div>
-          <div class="project-item" data-filename="Sailun 4.png" data-title="Sailun Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Sailun artwork here."></div>
-        </div>
-      </div>
-
-      <div class="brand-block" data-brand="beast-tyre">
-        <p class="brand-title">Beast Tyre</p>
-        <div class="subcategory-filters" data-subfilter-group="beast-tyre">
-          <button class="subfilter-btn active" data-subfilter="all">All</button>
-          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
-          <button class="subfilter-btn" data-subfilter="others">Others</button>
-        </div>
-        <div class="project-grid">
-          <div class="project-item" data-filename="Beast Tyre 1.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Beast Tyre artwork here."></div>
-          <div class="project-item" data-filename="Beast Tyre 2.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Beast Tyre artwork here."></div>
-          <div class="project-item" data-filename="Beast Tyre 3.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Beast Tyre artwork here."></div>
-          <div class="project-item" data-filename="Beast Tyre 4.png" data-title="Beast Tyre Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Beast Tyre artwork here."></div>
-        </div>
-      </div>
-
-      <div class="brand-block" data-brand="bestlight">
-        <p class="brand-title">Bestlight</p>
-        <div class="subcategory-filters" data-subfilter-group="bestlight">
-          <button class="subfilter-btn active" data-subfilter="all">All</button>
-          <button class="subfilter-btn" data-subfilter="poster">Poster</button>
-          <button class="subfilter-btn" data-subfilter="others">Others</button>
-        </div>
-        <div class="project-grid">
-          <div class="project-item" data-filename="Bestlight 1.png" data-title="Bestlight Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Bestlight artwork here."></div>
-          <div class="project-item" data-filename="Bestlight 2.png" data-title="Bestlight Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Bestlight artwork here."></div>
-          <div class="project-item" data-filename="Bestlight 3.png" data-title="Bestlight Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Bestlight artwork here."></div>
-          <div class="project-item" data-filename="Bestlight 4.png" data-title="Bestlight Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Bestlight artwork here."></div>
-        </div>
-      </div>
-    </div>
-
   </div>
   <div class="section-gap"></div>
 
@@ -1776,13 +1768,15 @@
 <div class="lightbox" id="workLightbox">
   <div class="lightbox-inner">
     <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
-    <button class="lightbox-arrow prev" id="lightboxPrev" aria-label="Previous image" style="display:none;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-    <button class="lightbox-arrow next" id="lightboxNext" aria-label="Next image" style="display:none;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-    </button>
-    <div class="lightbox-media" id="lightboxMedia"></div>
+    <div class="lightbox-media-wrap">
+      <button class="lightbox-arrow prev" id="lightboxPrev" aria-label="Previous image" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="lightbox-arrow next" id="lightboxNext" aria-label="Next image" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div class="lightbox-media" id="lightboxMedia"></div>
+    </div>
     <div class="lightbox-caption">
       <div class="work-title" id="lightboxTitle"></div>
       <div class="work-date" id="lightboxDate"></div>
@@ -1843,19 +1837,6 @@
 
     function buildLoadedItem(){
       item.innerHTML = '';
-
-      // Poster-style items use object-fit:contain (see CSS), which can
-      // leave empty space around the artwork if its proportions don't
-      // exactly match the frame. Fill that space with a blurred copy of
-      // the same image -- same trick Instagram/FB Stories uses so the
-      // background looks like it's "cast" from the photo's own colors.
-      var isPosterImage = !video && item.getAttribute('data-subcategory') === 'poster';
-      if (isPosterImage){
-        var backdrop = document.createElement('div');
-        backdrop.className = 'poster-backdrop';
-        backdrop.style.backgroundImage = "url('assets/" + filename + "')";
-        item.appendChild(backdrop);
-      }
 
       var media = document.createElement(video ? 'video' : 'img');
       media.src = 'assets/' + filename;
@@ -2367,19 +2348,6 @@
       if (window.innerWidth > 900 && drawer.classList.contains('open')) closeMenu();
     });
   })();
-
-  // ---- 5) Scroll-in reveal animations ----
-  // Ease-in fade + rise applied to key blocks per section (About Me,
-  // Services, Projects, Contact) as they enter the viewport.
-  //
-  // Mobile (<=900px): reveal once and leave it -- keeps the phone
-  // layout calm since everything's already scaled down.
-  //
-  // Desktop (>900px): the animation replays every time -- each block
-  // fades/rises in when scrolled into view, and resets so it fades
-  // back out when scrolled past, whether the user is scrolling down
-  // or back up. Completely separate from, and doesn't alter, the
-  // name-graphic shine effect handled above.
   (function(){
     var revealItems = document.querySelectorAll(
       '.frame-card, .service-card, .contact-card, .section-heading, .services-intro, .project-filters'
