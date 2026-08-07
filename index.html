@@ -1142,6 +1142,49 @@
     .lightbox-arrow.next{ right:8px; }
   }
 
+  /* ---- Mobile preview modal: shows a project's live site inside a
+     phone-shaped frame instead of navigating away in a new tab ---- */
+  .mobile-preview-modal{
+    display:none; position:fixed; inset:0; z-index:1000;
+    background:rgba(2,10,6,0.82); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    align-items:center; justify-content:center; padding:24px;
+  }
+  .mobile-preview-modal.active{ display:flex; }
+  .mobile-preview-box{
+    position:relative; display:flex; flex-direction:column; align-items:center;
+    max-height:92vh; overflow:auto; padding:8px;
+  }
+  .mobile-preview-title{
+    color:var(--green-soft); font-size:14px; font-weight:600; margin:0 0 14px; text-align:center;
+  }
+  .mobile-preview-close{
+    position:absolute; top:-6px; right:-6px; width:38px; height:38px; border-radius:50%;
+    background:rgba(2,10,6,0.85); border:1px solid rgba(234,255,243,0.25); color:var(--green-soft);
+    font-size:22px; line-height:1; cursor:pointer; z-index:2;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s, color .2s, background .2s;
+  }
+  .mobile-preview-close:hover{ border-color:var(--green); color:var(--green); background:rgba(2,10,6,0.95); }
+  .phone-frame{
+    width:375px; max-width:80vw; height:812px; max-height:88vh;
+    background:#04140b; border:10px solid #0c2318; border-radius:36px;
+    position:relative; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.5);
+  }
+  .phone-notch{
+    position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:130px; height:20px; background:#0c2318; border-radius:0 0 14px 14px; z-index:2;
+  }
+  .phone-frame-iframe{ width:100%; height:100%; border:0; background:#fff; }
+  .mobile-preview-open{
+    margin-top:16px; font-size:13px; color:var(--green-soft); text-decoration:none;
+    border:1px solid rgba(234,255,243,0.25); padding:8px 18px; border-radius:999px;
+    transition:border-color .2s, color .2s;
+  }
+  .mobile-preview-open:hover{ border-color:var(--green); color:var(--green); }
+  @media (max-width:480px){
+    .phone-frame{ width:320px; max-width:88vw; height:80vh; max-height:720px; }
+  }
+
   .project-placeholder{
     width:100%; aspect-ratio:3/4;
     border:1px dashed var(--panel-line);
@@ -1492,8 +1535,8 @@
   </section>
 
   <div class="project-filters" id="projectFilters">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="graphic-design">Graphic Design</button>
+    <button class="filter-btn active" data-filter="graphic-design">Graphic Design</button>
+    <button class="filter-btn" data-filter="web-development">Web Development</button>
     <button class="filter-btn" data-filter="scene-design">Scene Design</button>
     <button class="filter-btn" data-filter="logo-illustrations">Logo Illustrations</button>
     <button class="filter-btn" data-filter="motion-graphics">Animation</button>
@@ -1585,10 +1628,10 @@
           <button class="subfilter-btn" data-subfilter="others">Others</button>
         </div>
         <div class="project-grid">
-          <div class="project-item" data-filename="SKIL 1.png" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
-          <div class="project-item" data-filename="SKIL 2.png" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
-          <div class="project-item" data-filename="SKIL 3.png" data-title="SKIL Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add SKIL artwork here."></div>
-          <div class="project-item" data-filename="SKIL 4.png" data-title="SKIL Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL p1.webp" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL p2.webp" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL p3.jpg" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
+          <div class="project-item" data-filename="SKIL p4.webp" data-title="SKIL Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add SKIL artwork here."></div>
         </div>
       </div>
 
@@ -1644,6 +1687,21 @@
           <div class="project-item" data-filename="Bestlight 2.png" data-title="Bestlight Design" data-date="2026" data-subcategory="poster" data-description="Placeholder -- add Bestlight artwork here."></div>
           <div class="project-item" data-filename="Bestlight 3.png" data-title="Bestlight Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Bestlight artwork here."></div>
           <div class="project-item" data-filename="Bestlight 4.png" data-title="Bestlight Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add Bestlight artwork here."></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-category" data-category="web-development">
+      <div class="category-header">
+        <span class="category-heading-text">Web Development</span>
+        <span class="cat-line"></span>
+      </div>
+      <div class="project-grid">
+        <div class="project-item mobile-preview-trigger" data-preview-url="https://jmflorencio.github.io/BagView_Botanical_Garden/" data-preview-title="BagView Botanical Garden" style="text-decoration:none; cursor:pointer;">
+          <div class="project-placeholder" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:10px; padding:24px;">
+            <span style="font-size:16px; font-weight:600; color:#fff;">BagView Botanical Garden</span>
+            <span style="font-size:13px; opacity:0.75; color:#fff;">Tap to preview on mobile</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1786,6 +1844,22 @@
   </div>
 </div>
 
+<!-- ================= MOBILE PREVIEW MODAL =================
+     Opens when a Web Development project card is clicked. Shows the
+     live site inside a phone-shaped frame (iframe at a 375x667 mobile
+     viewport) instead of navigating away in a new tab. -->
+<div class="mobile-preview-modal" id="mobilePreviewModal">
+  <div class="mobile-preview-box">
+    <button type="button" class="mobile-preview-close" id="mobilePreviewClose" aria-label="Close">&times;</button>
+    <p class="mobile-preview-title" id="mobilePreviewTitle"></p>
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <iframe id="mobilePreviewFrame" class="phone-frame-iframe" src="" title="Mobile preview" loading="lazy"></iframe>
+    </div>
+    <a class="mobile-preview-open" id="mobilePreviewOpen" href="#" target="_blank" rel="noopener">Open full site &#8599;</a>
+  </div>
+</div>
+
 <!-- ================= TOOLS OVERLAY =================
      Opens when a visitor taps/clicks one of the 4 service cards above
      (Illustrations, Graphics and Layout, 3D Animation, Animation). Logos
@@ -1894,6 +1968,38 @@
       };
       probe.src = 'assets/' + filename;
     }
+  });
+
+  // ---- Mobile preview modal: Web Development project cards open a
+  // phone-framed live preview of the site instead of leaving the page ----
+  var mobilePreviewModal = document.getElementById('mobilePreviewModal');
+  var mobilePreviewFrame = document.getElementById('mobilePreviewFrame');
+  var mobilePreviewTitle = document.getElementById('mobilePreviewTitle');
+  var mobilePreviewOpen = document.getElementById('mobilePreviewOpen');
+  var mobilePreviewClose = document.getElementById('mobilePreviewClose');
+
+  function openMobilePreview(url, title){
+    mobilePreviewFrame.src = url;
+    mobilePreviewTitle.textContent = title || '';
+    mobilePreviewOpen.href = url;
+    mobilePreviewModal.classList.add('active');
+  }
+  function closeMobilePreview(){
+    mobilePreviewModal.classList.remove('active');
+    mobilePreviewFrame.src = '';
+  }
+
+  document.querySelectorAll('.mobile-preview-trigger').forEach(function(trigger){
+    trigger.addEventListener('click', function(){
+      openMobilePreview(trigger.getAttribute('data-preview-url'), trigger.getAttribute('data-preview-title'));
+    });
+  });
+  mobilePreviewClose.addEventListener('click', closeMobilePreview);
+  mobilePreviewModal.addEventListener('click', function(e){
+    if (e.target === mobilePreviewModal) closeMobilePreview();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && mobilePreviewModal.classList.contains('active')) closeMobilePreview();
   });
 
   // ---- Lightbox controls ----
@@ -2039,6 +2145,16 @@
   // ---- Project filter buttons: show only the selected category, or everything for "All" ----
   var filterButtons = document.querySelectorAll('#projectFilters .filter-btn');
   var categoryBlocks = document.querySelectorAll('#projectCategories .project-category');
+
+  (function applyInitialFilter(){
+    var activeBtn = document.querySelector('#projectFilters .filter-btn.active');
+    if (!activeBtn) return;
+    var target = activeBtn.getAttribute('data-filter');
+    categoryBlocks.forEach(function(block){
+      var match = (target === 'all' || block.getAttribute('data-category') === target);
+      block.style.display = match ? '' : 'none';
+    });
+  })();
 
   filterButtons.forEach(function(btn){
     btn.addEventListener('click', function(){
