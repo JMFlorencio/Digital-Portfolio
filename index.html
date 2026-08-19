@@ -418,20 +418,28 @@
 
   /* Brand tab switcher (Graphic Design): only one brand board is
      visible at a time, picked via these tabs, instead of all 7
-     brands and their filter rows stacked on the page at once. */
-  .brand-tabs{ display:flex; flex-wrap:wrap; gap:10px; margin:0 0 30px; }
+     brands and their filter rows stacked on the page at once.
+     Text-only tab strip -- no button chrome, just an underline
+     on the active brand -- to keep it light next to the pill-style
+     top-level category filters above it. */
+  .brand-tabs{ display:flex; flex-wrap:wrap; gap:8px 30px; margin:0 0 32px; }
   .brand-tab-btn{
-    font-family:inherit; font-size:12.5px; font-weight:bold; letter-spacing:.03em;
-    color:rgba(234,255,243,0.8);
-    background:transparent;
-    border:1.5px solid var(--panel-line);
-    border-radius:999px;
-    padding:9px 20px;
+    font-family:inherit; font-size:13.5px; font-weight:800; letter-spacing:.06em;
+    text-transform:uppercase;
+    color:rgba(234,255,243,0.5);
+    background:none;
+    border:none;
+    border-bottom:2px solid transparent;
+    padding:0 0 10px;
     cursor:pointer;
-    transition:background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+    transition:color .2s ease, border-color .2s ease;
   }
-  .brand-tab-btn:hover{ border-color:var(--green); transform:translateY(-1px); }
-  .brand-tab-btn.active{ background:var(--green); color:#04140b; border-color:var(--green); }
+  .brand-tab-btn:hover{ color:rgba(234,255,243,0.85); }
+  .brand-tab-btn.active{
+    color:var(--green);
+    border-bottom-color:var(--green);
+    text-shadow:0 0 10px rgba(57,255,143,0.35);
+  }
 
   /* Once tabs are driving brand selection, the per-brand heading is
      redundant (the active tab already says which brand you're on) --
@@ -444,26 +452,38 @@
 
   @media (max-width:600px){
     .brand-tabs{
-      flex-wrap:nowrap; overflow-x:auto; gap:8px;
+      flex-wrap:nowrap; overflow-x:auto; gap:22px;
       -webkit-overflow-scrolling:touch; scrollbar-width:none;
       margin:0 -20px 26px; padding:0 20px;
     }
     .brand-tabs::-webkit-scrollbar{ display:none; }
-    .brand-tab-btn{ flex:0 0 auto; font-size:12px; padding:8px 16px; white-space:nowrap; }
+    .brand-tab-btn{ flex:0 0 auto; font-size:12px; white-space:nowrap; }
   }
-  .subcategory-filters{ display:flex; flex-wrap:wrap; gap:10px; margin:0 0 22px; }
+
+  /* Subcategory filters (Poster / Mockups / etc, nested one level
+     under a brand): plain inline text separated by a middle dot,
+     no borders or fills -- the lightest-weight row in the stack
+     since it's the most granular filter. */
+  .subcategory-filters{ display:flex; flex-wrap:wrap; align-items:center; margin:0 0 26px; }
   .subfilter-btn{
-    font-family:inherit; font-size:12px; font-weight:bold; letter-spacing:.02em;
-    color:rgba(234,255,243,0.8);
-    background:transparent;
-    border:1px solid var(--panel-line);
-    border-radius:999px;
-    padding:8px 18px;
+    font-family:inherit; font-size:12.5px; font-weight:600; letter-spacing:.03em;
+    text-transform:uppercase;
+    color:rgba(234,255,243,0.5);
+    background:none;
+    border:none;
+    padding:4px 0;
     cursor:pointer;
-    transition:background .2s ease, color .2s ease, border-color .2s ease;
+    transition:color .2s ease;
   }
-  .subfilter-btn:hover{ border-color:var(--green); }
-  .subfilter-btn.active{ background:var(--green); color:#04140b; border-color:var(--green); }
+  .subfilter-btn:not(:last-child)::after{
+    content:"\00b7";
+    display:inline-block;
+    margin:0 12px;
+    color:rgba(234,255,243,0.25);
+    font-weight:400;
+  }
+  .subfilter-btn:hover{ color:rgba(234,255,243,0.85); }
+  .subfilter-btn.active{ color:var(--green); font-weight:800; text-shadow:0 0 8px rgba(57,255,143,0.3); }
 
   /* Behance project embeds (Sports Development / Arfix Studio sub-blocks
      inside "Others"). Wrap each <iframe> in this div. */
