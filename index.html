@@ -415,6 +415,42 @@
     flex:1; height:1px;
     background:rgba(57,255,143,0.18);
   }
+
+  /* Brand tab switcher (Graphic Design): only one brand board is
+     visible at a time, picked via these tabs, instead of all 7
+     brands and their filter rows stacked on the page at once. */
+  .brand-tabs{ display:flex; flex-wrap:wrap; gap:10px; margin:0 0 30px; }
+  .brand-tab-btn{
+    font-family:inherit; font-size:12.5px; font-weight:bold; letter-spacing:.03em;
+    color:rgba(234,255,243,0.8);
+    background:transparent;
+    border:1.5px solid var(--panel-line);
+    border-radius:999px;
+    padding:9px 20px;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .brand-tab-btn:hover{ border-color:var(--green); transform:translateY(-1px); }
+  .brand-tab-btn.active{ background:var(--green); color:#04140b; border-color:var(--green); }
+
+  /* Once tabs are driving brand selection, the per-brand heading is
+     redundant (the active tab already says which brand you're on) --
+     hidden here, and each brand-block is hidden until it's the
+     active one. brand-block + brand-block's margin-top is harmless
+     since only one is ever visible at a time. */
+  .project-category[data-category="graphic-design"] .brand-title{ display:none; }
+  .project-category[data-category="graphic-design"] .brand-block{ display:none; }
+  .project-category[data-category="graphic-design"] .brand-block.active-brand{ display:block; }
+
+  @media (max-width:600px){
+    .brand-tabs{
+      flex-wrap:nowrap; overflow-x:auto; gap:8px;
+      -webkit-overflow-scrolling:touch; scrollbar-width:none;
+      margin:0 -20px 26px; padding:0 20px;
+    }
+    .brand-tabs::-webkit-scrollbar{ display:none; }
+    .brand-tab-btn{ flex:0 0 auto; font-size:12px; padding:8px 16px; white-space:nowrap; }
+  }
   .subcategory-filters{ display:flex; flex-wrap:wrap; gap:10px; margin:0 0 22px; }
   .subfilter-btn{
     font-family:inherit; font-size:12px; font-weight:bold; letter-spacing:.02em;
@@ -1559,6 +1595,20 @@
         <span class="cat-line"></span>
       </div>
 
+      <!-- ============ BRAND TABS ============
+           One brand's board shows at a time instead of all 7 stacked
+           on top of each other. JS below toggles .active-brand on the
+           matching .brand-block and .active on the matching tab. -->
+      <div class="brand-tabs" id="graphicBrandTabs">
+        <button class="brand-tab-btn active" data-brand-tab="arfix-studio">Arfix Studio</button>
+        <button class="brand-tab-btn" data-brand-tab="uc-sdo">UC-SDO</button>
+        <button class="brand-tab-btn" data-brand-tab="hoyoma">Hoyoma</button>
+        <button class="brand-tab-btn" data-brand-tab="skil">SKIL</button>
+        <button class="brand-tab-btn" data-brand-tab="sailun">Sailun</button>
+        <button class="brand-tab-btn" data-brand-tab="beast-tyre">Beast Tyre</button>
+        <button class="brand-tab-btn" data-brand-tab="bestlight">Bestlight</button>
+      </div>
+
     <div class="brand-block" data-brand="arfix-studio">
         <p class="brand-title">Arfix Studio</p>
         <div class="subcategory-filters" data-subfilter-group="arfix-studio">
@@ -2322,6 +2372,31 @@
   document.addEventListener('keydown', function(e){
     if (e.key === 'Escape' && toolsOverlay && toolsOverlay.classList.contains('is-open')) closeToolsOverlay();
   });
+
+  // ---- Brand tabs (Graphic Design): show one brand's board at a time ----
+  (function(){
+    var tabsWrap = document.getElementById('graphicBrandTabs');
+    if (!tabsWrap) return;
+    var tabButtons = tabsWrap.querySelectorAll('.brand-tab-btn');
+    var brandBlocks = document.querySelectorAll('.project-category[data-category="graphic-design"] .brand-block');
+
+    function showBrand(brand){
+      brandBlocks.forEach(function(block){
+        block.classList.toggle('active-brand', block.getAttribute('data-brand') === brand);
+      });
+      tabButtons.forEach(function(btn){
+        btn.classList.toggle('active', btn.getAttribute('data-brand-tab') === brand);
+      });
+    }
+
+    tabButtons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        showBrand(btn.getAttribute('data-brand-tab'));
+      });
+    });
+
+    if (tabButtons.length) showBrand(tabButtons[0].getAttribute('data-brand-tab'));
+  })();
 
   // ---- Sub-filters (e.g. Graphic Design > Poster / Mockup, if ever added) ----
   // Scoped per subcategory-block so multiple sub-filter groups can coexist.
