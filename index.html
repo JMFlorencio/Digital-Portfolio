@@ -1609,6 +1609,7 @@
     <button class="filter-btn" data-filter="scene-design">Scene Design</button>
     <button class="filter-btn" data-filter="logo-illustrations">Logo Illustrations</button>
     <button class="filter-btn" data-filter="motion-graphics">Animation</button>
+    <button class="filter-btn" data-filter="3d">3D</button>
   </div>
 
   <div class="project-categories" id="projectCategories">
@@ -1821,14 +1822,17 @@
           <div class="project-item" data-filename="Sunset.png" data-title="My Imaginary place" data-date="2023" data-description="A personal illustration imagining a peaceful place at sunset, built early on to practice lighting and gradients within a flat design style."></div>
         </div>
       </div>
+    </div>
 
-      <div class="subcategory-block" data-subcat-group="3d-scene-design">
-        <div class="subcategory-header">
-          <p class="subcategory-title">3D Scene Design</p>
-        </div>
-        <div class="project-grid">
-          <div class="project-item" data-filename="SugarIsland_04_07_24.glb" data-title="Sugar Island" data-date="2026" data-description="A fully modeled 3D environment -- drag to rotate, pinch or scroll to zoom, and explore the scene from any angle."></div>
-        </div>
+    <div class="project-category" data-category="3d">
+      <div class="category-header">
+        <span class="category-heading-text">3D</span>
+        <span class="cat-line"></span>
+      </div>
+      <div class="project-grid">
+        <div class="project-item" data-filename="SugarIsland_04_07_24.glb" data-title="Sugar Island" data-date="2026" data-description="A fully modeled 3D environment -- drag to rotate, pinch or scroll to zoom, and explore the scene from any angle."></div>
+        <div class="project-item" data-filename="SDO_LOGO_ANIMATION_Edit_08_11_26.glb" data-title="Sports Development Logo" data-date="2026" data-description="A fully modeled 3D logo piece -- drag to rotate, pinch or scroll to zoom, and explore the model from any angle."></div>
+        <div class="project-item" data-filename="Scene Design N Character.glb" data-title="Scene Design N Character" data-date="2026" data-description="A fully modeled 3D character and scene study -- drag to rotate, pinch or scroll to zoom, and explore the model from any angle."></div>
       </div>
     </div>
 
@@ -2042,7 +2046,7 @@
         media.setAttribute('rotation-per-second', '18deg');
         media.setAttribute('shadow-intensity', '1');
         media.setAttribute('exposure', '1');
-        media.setAttribute('touch-action', 'pan-y');
+        media.style.touchAction = 'pan-y'; // real property, not an attribute -- lets the page still scroll vertically on mobile
       } else {
         media = document.createElement(video ? 'video' : 'img');
         media.src = 'assets/' + filename;
