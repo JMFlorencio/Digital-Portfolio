@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+<!-- model-viewer: renders .glb/.gltf 3D models inline (used by 3D Scene Design tiles + lightbox) -->
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <style>
   :root{
     --bg-0:#050906;
@@ -1032,6 +1034,9 @@
     background:#0a120e;
   }
   .project-item img, .project-item video{ width:100%; height:auto; object-fit:cover; border-radius:14px; display:block; }
+  /* model-viewer has no intrinsic aspect ratio like an image, so give
+     grid tiles a fixed height to sit nicely in the masonry columns. */
+  .project-item model-viewer{ width:100%; height:320px; display:block; border-radius:14px; background:#0a120e; --poster-color:#0a120e; }
 
   /* Placeholder tiles (no media added yet) don't have an intrinsic
      image size to drive their height, so give them a few varied
@@ -1124,6 +1129,14 @@
     display:block;
     margin:0 auto;
     touch-action: pan-y;
+  }
+  .lightbox-inner model-viewer{
+    width:min(86vw, 800px); max-width:100%;
+    height:64vh;
+    display:block;
+    margin:0 auto;
+    background:#000;
+    --poster-color:#000;
   }
   .lightbox-caption{ padding:26px 40px 32px; text-align:center; }
   .lightbox-caption .work-title{
@@ -1796,11 +1809,26 @@
         <span class="category-heading-text">Scene Design</span>
         <span class="cat-line"></span>
       </div>
-      <div class="project-grid">
-        <div class="project-item" data-filename="Brown Design 2.png" data-title="Flat Scene Design Illustration" data-date="2026" data-description="A flat-style vector scene built around warm, earthy tones -- a study in composing depth and mood using shape and color rather than fine detail."></div>
-        <div class="project-item" data-filename="The Lady On the Mountain.png" data-title="Flat Scene Design Illustration II" data-date="2026" data-description="A follow-up flat illustration exploring a quiet mountain scene, focused on layered silhouettes and a calm, atmospheric color palette."></div>
-        <div class="project-item" data-filename="Cherry Blossom.png" data-title="Sakura + Beach" data-date="2026" data-description="Two contrasting environments -- soft sakura blooms and an open beach -- blended into one flat-vector scene to explore color harmony across different settings."></div>
-        <div class="project-item" data-filename="Sunset.png" data-title="My Imaginary place" data-date="2023" data-description="A personal illustration imagining a peaceful place at sunset, built early on to practice lighting and gradients within a flat design style."></div>
+
+      <div class="subcategory-block" data-subcat-group="2d-scene-design">
+        <div class="subcategory-header">
+          <p class="subcategory-title">2D Scene Design</p>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="Brown Design 2.png" data-title="Flat Scene Design Illustration" data-date="2026" data-description="A flat-style vector scene built around warm, earthy tones -- a study in composing depth and mood using shape and color rather than fine detail."></div>
+          <div class="project-item" data-filename="The Lady On the Mountain.png" data-title="Flat Scene Design Illustration II" data-date="2026" data-description="A follow-up flat illustration exploring a quiet mountain scene, focused on layered silhouettes and a calm, atmospheric color palette."></div>
+          <div class="project-item" data-filename="Cherry Blossom.png" data-title="Sakura + Beach" data-date="2026" data-description="Two contrasting environments -- soft sakura blooms and an open beach -- blended into one flat-vector scene to explore color harmony across different settings."></div>
+          <div class="project-item" data-filename="Sunset.png" data-title="My Imaginary place" data-date="2023" data-description="A personal illustration imagining a peaceful place at sunset, built early on to practice lighting and gradients within a flat design style."></div>
+        </div>
+      </div>
+
+      <div class="subcategory-block" data-subcat-group="3d-scene-design">
+        <div class="subcategory-header">
+          <p class="subcategory-title">3D Scene Design</p>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filename="SugarIsland_04_07_24.glb" data-title="Sugar Island" data-date="2026" data-description="A fully modeled 3D environment -- drag to rotate, pinch or scroll to zoom, and explore the scene from any angle."></div>
+        </div>
       </div>
     </div>
 
@@ -1964,6 +1992,7 @@
 
 <script>
   var VIDEO_EXTENSIONS = ['mp4', 'webm', 'mov', 'm4v', 'ogv'];
+  var MODEL_EXTENSIONS = ['glb', 'gltf'];
   var isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
   function getExt(filename){
@@ -1971,6 +2000,9 @@
   }
   function isVideoFile(filename){
     return VIDEO_EXTENSIONS.indexOf(getExt(filename)) !== -1;
+  }
+  function isModelFile(filename){
+    return MODEL_EXTENSIONS.indexOf(getExt(filename)) !== -1;
   }
   var expandIconSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>';
 
@@ -1993,24 +2025,40 @@
     var date = item.getAttribute('data-date') || '';
     var description = item.getAttribute('data-description') || '';
     var video = isVideoFile(filename);
+    var model = isModelFile(filename);
+    // 'mediaType' drives both the grid tile and the lightbox: image, video, or model (3D)
+    var mediaType = model ? 'model' : (video ? 'video' : 'image');
 
     function buildLoadedItem(){
       item.innerHTML = '';
 
-      var media = document.createElement(video ? 'video' : 'img');
-      media.src = 'assets/' + filename;
-      media.alt = title;
-      if (video){
-        media.muted = true;
-        media.loop = true;
-        media.playsInline = true;
-        media.autoplay = true;
+      var media;
+      if (model){
+        media = document.createElement('model-viewer');
+        media.setAttribute('src', 'assets/' + filename);
+        media.setAttribute('alt', title);
+        media.setAttribute('camera-controls', '');
+        media.setAttribute('auto-rotate', '');
+        media.setAttribute('rotation-per-second', '18deg');
+        media.setAttribute('shadow-intensity', '1');
+        media.setAttribute('exposure', '1');
+        media.setAttribute('touch-action', 'pan-y');
+      } else {
+        media = document.createElement(video ? 'video' : 'img');
+        media.src = 'assets/' + filename;
+        media.alt = title;
+        if (video){
+          media.muted = true;
+          media.loop = true;
+          media.playsInline = true;
+          media.autoplay = true;
+        }
       }
       item.appendChild(media);
 
       var badge = document.createElement('div');
       badge.className = 'work-type-badge';
-      badge.textContent = video ? 'Video' : 'Image';
+      badge.textContent = model ? '3D Model' : (video ? 'Video' : 'Image');
       item.appendChild(badge);
 
       var overlay = document.createElement('div');
@@ -2026,19 +2074,51 @@
       expand.innerHTML = expandIconSVG;
       item.appendChild(expand);
 
+      // For 3D tiles, clicks/drags rotate the model itself, so only the
+      // expand button opens the lightbox -- a plain tap on the tile
+      // shouldn't hijack the drag-to-rotate gesture.
       expand.addEventListener('click', function(e){
         e.stopPropagation();
-        openLightbox(images, title, date, video, description);
+        openLightbox(images, title, date, mediaType, description);
       });
 
-      item.addEventListener('click', function(){
-        // One tap/click -- on any device -- opens the piece right away.
-        openLightbox(images, title, date, video, description);
-      });
+      if (!model){
+        item.addEventListener('click', function(){
+          // One tap/click -- on any device -- opens the piece right away.
+          openLightbox(images, title, date, mediaType, description);
+        });
+      }
     }
 
     var probe = new Image();
-    if (video){
+    if (model){
+      // Render the tile immediately -- model-viewer shows its own loading
+      // progress bar while the .glb downloads. If the model file 404s, or
+      // the model-viewer library itself never loads (e.g. the page was
+      // opened directly as a local file:// instead of served over http/https --
+      // browsers block ES module script fetches over file://), fall back
+      // to the placeholder instead of leaving the tile blank forever.
+      var modelReady = false;
+      var modelSettled = false;
+      function showModelPlaceholder(){
+        if (modelSettled) return;
+        modelSettled = true;
+        item.innerHTML = '<div class="project-placeholder">+ Add ' + filename + '</div>';
+      }
+      buildLoadedItem();
+      var modelEl = item.querySelector('model-viewer');
+      if (modelEl){
+        modelEl.addEventListener('load', function(){ modelReady = true; modelSettled = true; });
+        modelEl.addEventListener('error', showModelPlaceholder);
+      }
+      // Safety net: if model-viewer's custom element never registered at
+      // all, 'load'/'error' will never fire -- give up after a few seconds.
+      setTimeout(function(){
+        if (!modelReady && (!window.customElements || !customElements.get('model-viewer'))){
+          showModelPlaceholder();
+        }
+      }, 4000);
+    } else if (video){
       // Videos can't be probed with Image(); check existence via HEAD-like fetch fallback to <video> load event
       var testVideo = document.createElement('video');
       testVideo.src = 'assets/' + filename;
@@ -2103,7 +2183,13 @@
   var currentSlide = 0;
   var lightboxTrack = null;
 
-  function openLightbox(images, title, date, isVideo, description){
+  function openLightbox(images, title, date, mediaType, description){
+    // Back-compat: earlier call sites passed a boolean isVideo instead of a mediaType string.
+    if (mediaType === true) mediaType = 'video';
+    if (mediaType === false) mediaType = 'image';
+    var isVideo = mediaType === 'video';
+    var isModel = mediaType === 'model';
+
     currentImages = images;
     currentIsVideo = isVideo;
     currentSlide = 0;
@@ -2115,12 +2201,24 @@
     images.forEach(function(filename){
       var slide = document.createElement('div');
       slide.className = 'lightbox-slide';
-      var media = document.createElement(isVideo ? 'video' : 'img');
-      media.src = 'assets/' + filename;
-      media.alt = title;
-      if (isVideo){
-        media.controls = true;
-        media.playsInline = true;
+      var media;
+      if (isModel){
+        media = document.createElement('model-viewer');
+        media.setAttribute('src', 'assets/' + filename);
+        media.setAttribute('alt', title);
+        media.setAttribute('camera-controls', '');
+        media.setAttribute('auto-rotate', '');
+        media.setAttribute('rotation-per-second', '18deg');
+        media.setAttribute('shadow-intensity', '1');
+        media.setAttribute('exposure', '1');
+      } else {
+        media = document.createElement(isVideo ? 'video' : 'img');
+        media.src = 'assets/' + filename;
+        media.alt = title;
+        if (isVideo){
+          media.controls = true;
+          media.playsInline = true;
+        }
       }
       slide.appendChild(media);
       track.appendChild(slide);
