@@ -1357,34 +1357,10 @@
     display:block;
   }
 
-  /* Stats that count up beneath the avatar while the site loads.
-     Numbers are read from the page itself (see preloader script), so
-     they update automatically when tiles / brands are added. */
-  .preloader-stats{
-    display:flex; align-items:center; justify-content:center; gap:28px;
-    animation:preloaderStatsIn .6s ease .15s both;
-  }
-  .preloader-stat{ display:flex; flex-direction:column; align-items:center; gap:6px; min-width:120px; }
-  .preloader-stat-num{
-    font-family:'Orbitron','Poppins',sans-serif;
-    font-size:38px; font-weight:800; line-height:1;
-    color:var(--green);
-    font-variant-numeric:tabular-nums;
-  }
-  .preloader-stat-label{
-    font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--green-soft); opacity:.75;
-  }
-  .preloader-stat-divider{ width:1px; height:44px; background:var(--panel-line); }
-  @keyframes preloaderStatsIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
   @keyframes preloaderSpin{ to{ transform:rotate(360deg); } }
   @media (max-width:600px){
     .preloader-spinner-wrap{ width:110px; height:110px; }
     .preloader{ gap:26px; }
-    .preloader-stats{ gap:16px; }
-    .preloader-stat{ min-width:100px; }
-    .preloader-stat-num{ font-size:30px; }
-    .preloader-stat-label{ font-size:9.5px; letter-spacing:.14em; }
   }
 </style>
 </head>
@@ -1400,22 +1376,11 @@
       <img src="assets/HEAD.png" alt="Joey Florencio">
     </div>
   </div>
-  <div class="preloader-stats" aria-hidden="true">
-    <div class="preloader-stat">
-      <span class="preloader-stat-num" id="statProjects">0</span>
-      <span class="preloader-stat-label">Projects Created</span>
-    </div>
-    <div class="preloader-stat-divider"></div>
-    <div class="preloader-stat">
-      <span class="preloader-stat-num" id="statBrands">0</span>
-      <span class="preloader-stat-label">Brands Collaborated</span>
-    </div>
-  </div>
 </div>
 <script>
   (function(){
     var preloader = document.getElementById('preloader');
-    var minTime = 2400; // long enough for the stat counters to finish counting up
+    var minTime = 2400; // minimum time the preloader stays visible
     var start = Date.now();
     function hidePreloader(){
       var wait = Math.max(0, minTime - (Date.now() - start));
@@ -1424,34 +1389,6 @@
         setTimeout(function(){ preloader.style.display = 'none'; }, 500);
       }, wait);
     }
-    // ---- Stat counters (Projects / Brands) ----
-    // Counts are read from the page markup once it has been parsed:
-    //   Projects = every .project-item tile, Brands = every .brand-block.
-    function countUp(el, target, duration){
-      if (!el) return;
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-        el.textContent = target; return;
-      }
-      var t0 = null;
-      function step(ts){
-        if (t0 === null) t0 = ts;
-        var p = Math.min(1, (ts - t0) / duration);
-        var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
-        el.textContent = Math.round(target * eased);
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }
-    function startStats(){
-      countUp(document.getElementById('statProjects'), document.querySelectorAll('.project-item').length, 1800);
-      countUp(document.getElementById('statBrands'), document.querySelectorAll('.brand-block').length, 1800);
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', startStats);
-    } else {
-      startStats();
-    }
-
     // Hide on window load, but never wait longer than 4s -- large project
     // media can hold the load event open for a long time.
     var preloaderDone = false;
@@ -1873,6 +1810,8 @@
 		  <div class="project-item" data-filename="MMAPP_F_RED.png" data-title="MMA Fiesta Poster" data-date="2026" data-subcategory="poster" data-description="This countdown poster was used on MMA Fiesta a Multimedia Arts Seminar that held on University of The Cordilleras ."></div>
         </div>
       </div>
+    </div>
+
     <div class="project-category" data-category="web-development">
       <div class="category-header">
         <span class="category-heading-text">Web Development</span>
