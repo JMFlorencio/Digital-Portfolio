@@ -6,7 +6,7 @@
 <title>Joey Florencio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
 <!-- model-viewer: renders .glb/.gltf 3D models inline (used by 3D Scene Design tiles + lightbox) -->
 <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <style>
@@ -1452,10 +1452,15 @@
       startStats();
     }
 
+    // Hide on window load, but never wait longer than 4s -- large project
+    // media can hold the load event open for a long time.
+    var preloaderDone = false;
+    function hidePreloaderOnce(){ if (preloaderDone) return; preloaderDone = true; hidePreloader(); }
     if (document.readyState === 'complete') {
-      hidePreloader();
+      hidePreloaderOnce();
     } else {
-      window.addEventListener('load', hidePreloader);
+      window.addEventListener('load', hidePreloaderOnce);
+      setTimeout(hidePreloaderOnce, 4000);
     }
   })();
 </script>
@@ -2074,6 +2079,21 @@
   var MODEL_EXTENSIONS = ['glb', 'gltf'];
   var isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
+  // Encodes spaces/special characters in filenames so they resolve on GitHub Pages.
+  function assetUrl(filename){ return 'assets/' + encodeURIComponent(filename); }
+  // GitHub Pages is case-sensitive (Windows isn't). If a file 404s, retry the
+  // same name with the extension in other cases (png -> PNG, jpg -> JPG, etc.)
+  function attachCaseFallback(el, filename, onGiveUp){
+    var m = filename.match(/^(.*)\.([^.]+)$/);
+    if (!m){ if (onGiveUp) el.addEventListener('error', onGiveUp); return; }
+    var tries = [m[2].toUpperCase(), m[2].toLowerCase()].filter(function(e, i, a){
+      return e !== m[2] && a.indexOf(e) === i;
+    });
+    el.addEventListener('error', function(){
+      if (!tries.length){ if (onGiveUp) onGiveUp(); return; }
+      el.src = assetUrl(m[1] + '.' + tries.shift());
+    });
+  }
   function getExt(filename){
     return (filename.split('.').pop() || '').toLowerCase();
   }
@@ -2114,18 +2134,20 @@
       var media;
       if (model){
         media = document.createElement('model-viewer');
-        media.setAttribute('src', 'assets/' + filename);
+        media.setAttribute('src', assetUrl(filename));
         media.setAttribute('alt', title);
         media.setAttribute('camera-controls', '');
         media.setAttribute('auto-rotate', '');
+        media.setAttribute('loading', 'lazy');
         media.setAttribute('rotation-per-second', '18deg');
         media.setAttribute('shadow-intensity', '1');
         media.setAttribute('exposure', '1');
         media.style.touchAction = 'pan-y'; // real property, not an attribute -- lets the page still scroll vertically on mobile
       } else {
         media = document.createElement(video ? 'video' : 'img');
-        media.src = 'assets/' + filename;
+        media.src = assetUrl(filename);
         media.alt = title;
+        if (!video){ media.loading = 'lazy'; media.decoding = 'async'; }
         if (video){
           media.muted = true;
           media.loop = true;
@@ -2169,7 +2191,6 @@
       }
     }
 
-    var probe = new Image();
     if (model){
       // Render the tile immediately -- model-viewer shows its own loading
       // progress bar while the .glb downloads. If the model file 404s, or
@@ -2198,19 +2219,27 @@
         }
       }, 4000);
     } else if (video){
-      // Videos can't be probed with Image(); check existence via HEAD-like fetch fallback to <video> load event
-      var testVideo = document.createElement('video');
-      testVideo.src = 'assets/' + filename;
-      testVideo.onloadeddata = buildLoadedItem;
-      testVideo.onerror = function(){
-        item.innerHTML = '<div class="project-placeholder">+ Add ' + filename + '</div>';
-      };
+      // Build the tile straight away (metadata only) and fall back to the
+      // placeholder if the file is missing -- no full pre-download.
+      buildLoadedItem();
+      var vidEl = item.querySelector('video');
+      if (vidEl){
+        vidEl.preload = 'metadata';
+        vidEl.addEventListener('error', function(){
+          item.innerHTML = '<div class="project-placeholder">+ Add ' + filename + '</div>';
+        });
+      }
     } else {
-      probe.onload = buildLoadedItem;
-      probe.onerror = function(){
-        item.innerHTML = '<div class="project-placeholder">+ Add ' + filename + '</div>';
-      };
-      probe.src = 'assets/' + filename;
+      // Build the <img> directly (lazy-loaded) instead of downloading each
+      // file twice via a probe. Missing file -> placeholder, after the
+      // extension-case fallback has had its chance.
+      buildLoadedItem();
+      var imgEl = item.querySelector('img');
+      if (imgEl){
+        attachCaseFallback(imgEl, filename, function(){
+          item.innerHTML = '<div class="project-placeholder">+ Add ' + filename + '</div>';
+        });
+      }
     }
   });
 
@@ -2283,7 +2312,7 @@
       var media;
       if (isModel){
         media = document.createElement('model-viewer');
-        media.setAttribute('src', 'assets/' + filename);
+        media.setAttribute('src', assetUrl(filename));
         media.setAttribute('alt', title);
         media.setAttribute('camera-controls', '');
         media.setAttribute('auto-rotate', '');
@@ -2292,8 +2321,9 @@
         media.setAttribute('exposure', '1');
       } else {
         media = document.createElement(isVideo ? 'video' : 'img');
-        media.src = 'assets/' + filename;
+        media.src = assetUrl(filename);
         media.alt = title;
+        if (!isVideo) attachCaseFallback(media, filename);
         if (isVideo){
           media.controls = true;
           media.playsInline = true;
