@@ -1322,6 +1322,7 @@
   .preloader{
     position:fixed; inset:0; z-index:9999;
     display:flex; align-items:center; justify-content:center;
+    flex-direction:column; gap:34px;
     background:var(--bg-0);
     transition:opacity .5s ease, visibility .5s ease;
   }
@@ -1356,9 +1357,34 @@
     display:block;
   }
 
+  /* Stats that count up beneath the avatar while the site loads.
+     Numbers are read from the page itself (see preloader script), so
+     they update automatically when tiles / brands are added. */
+  .preloader-stats{
+    display:flex; align-items:center; justify-content:center; gap:28px;
+    animation:preloaderStatsIn .6s ease .15s both;
+  }
+  .preloader-stat{ display:flex; flex-direction:column; align-items:center; gap:6px; min-width:120px; }
+  .preloader-stat-num{
+    font-family:'Orbitron','Poppins',sans-serif;
+    font-size:38px; font-weight:800; line-height:1;
+    color:var(--green);
+    font-variant-numeric:tabular-nums;
+  }
+  .preloader-stat-label{
+    font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--green-soft); opacity:.75;
+  }
+  .preloader-stat-divider{ width:1px; height:44px; background:var(--panel-line); }
+  @keyframes preloaderStatsIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
   @keyframes preloaderSpin{ to{ transform:rotate(360deg); } }
   @media (max-width:600px){
     .preloader-spinner-wrap{ width:110px; height:110px; }
+    .preloader{ gap:26px; }
+    .preloader-stats{ gap:16px; }
+    .preloader-stat{ min-width:100px; }
+    .preloader-stat-num{ font-size:30px; }
+    .preloader-stat-label{ font-size:9.5px; letter-spacing:.14em; }
   }
 </style>
 </head>
@@ -1374,11 +1400,22 @@
       <img src="assets/HEAD.png" alt="Joey Florencio">
     </div>
   </div>
+  <div class="preloader-stats" aria-hidden="true">
+    <div class="preloader-stat">
+      <span class="preloader-stat-num" id="statProjects">0</span>
+      <span class="preloader-stat-label">Projects Created</span>
+    </div>
+    <div class="preloader-stat-divider"></div>
+    <div class="preloader-stat">
+      <span class="preloader-stat-num" id="statBrands">0</span>
+      <span class="preloader-stat-label">Brands Collaborated</span>
+    </div>
+  </div>
 </div>
 <script>
   (function(){
     var preloader = document.getElementById('preloader');
-    var minTime = 1000; // keeps the loader visible briefly even on fast loads
+    var minTime = 2400; // long enough for the stat counters to finish counting up
     var start = Date.now();
     function hidePreloader(){
       var wait = Math.max(0, minTime - (Date.now() - start));
@@ -1387,6 +1424,34 @@
         setTimeout(function(){ preloader.style.display = 'none'; }, 500);
       }, wait);
     }
+    // ---- Stat counters (Projects / Brands) ----
+    // Counts are read from the page markup once it has been parsed:
+    //   Projects = every .project-item tile, Brands = every .brand-block.
+    function countUp(el, target, duration){
+      if (!el) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        el.textContent = target; return;
+      }
+      var t0 = null;
+      function step(ts){
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / duration);
+        var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+        el.textContent = Math.round(target * eased);
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    function startStats(){
+      countUp(document.getElementById('statProjects'), document.querySelectorAll('.project-item').length, 1800);
+      countUp(document.getElementById('statBrands'), document.querySelectorAll('.brand-block').length, 1800);
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startStats);
+    } else {
+      startStats();
+    }
+
     if (document.readyState === 'complete') {
       hidePreloader();
     } else {
@@ -1652,14 +1717,14 @@
           <button class="subfilter-btn" data-subfilter="others">Others</button>
         </div>
         <div class="project-grid">
+		  <div class="project-item" data-filenames="IP1.png, IP2.png, IP3.png" data-title="Arfix Studio Design" data-date="2026" 
+		  data-subcategory="poster" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
           <div class="project-item" data-filename="Booth Mockup.webp" data-title="Arfix Studio Booth Mockup" data-date="2025" data-subcategory="mockups" data-description="A realistic mockup presentation of a warmer jacket design made for UC-SDO, used to preview the print/embroidery placement before production."></div>
           <div class="project-item" data-filenames="Trifold brochure.webp, Trifold brochure Content.webp" data-title="Arfix Studio Design" data-date="2026" 
 		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
 		  <div class="project-item" data-filenames="Services.webp, Mission Vision.webp" data-title="Arfix Studio Design" data-date="2026" 
 		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
           <div class="project-item" data-filename="Podcast Banner.webp" data-title="Arfix Studio Design" data-date="2026" data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
-		   <div class="project-item" data-filenames="IP1.png, IP2.png, IP3.png" data-title="Arfix Studio Design" data-date="2026" 
-		  data-subcategory="others" data-description="Placeholder -- add more Arfix Studio artwork here."></div>
         </div>
       </div>
 
@@ -1676,13 +1741,13 @@
         <div class="project-grid">
           <div class="project-item" data-filename="Sports Graphic.png" data-title="Event Poster Design" data-date="2025" data-subcategory="social-media-poster" data-description="A sports event poster designed to grab attention fast, using bold type and high-energy graphics suited for print and social media."></div>
           <div class="project-item" data-filename="P1.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="social-media-poster" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-          <div class="project-item" data-filename="Tryout.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-		     <div class="project-item" data-filename="UC BANNER 2025.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+		  <div class="project-item" data-filename="Tryout.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="social-media-poster" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+		  <div class="project-item" data-filename="UC BANNER 2025.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
           <div class="project-item" data-filename="Womens Athletics.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="intramural-banners" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
           <div class="project-item" data-filename="PRISAA POLO.jpg" data-title="PRISAA Polo Shirt Mockup" data-date="2026" data-subcategory="mockups" data-description="A polo shirt mockup created for PRISAA, showcasing the design layout and colorway ahead of the actual print run."></div>
-          <div class="project-item" data-filename="Warmer_Mockup1.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-          <div class="project-item" data-filename="Warmer_Mockuo_Wht.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
-          <div class="project-item" data-filename="Warmer_Mockuo_BLK.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+          <div class="project-item" data-filenames="Warmer_Mockup1.jpg, Warmer_Mockuo_Wht.jpg, Warmer_Mockuo_BLK.jpg" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+		  <div class="project-item" data-filenames="Jersey V1.png, Jersey V2.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
+		  <div class="project-item" data-filenames="Chinese Collar1.png, Chinese Collar2.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
           <div class="project-item" data-filename="Allied Sports Highlight_compressed.mp4" data-title="UC-SDO Design" data-date="2026" data-subcategory="videos" data-description="Placeholder -- add more UC-Sports Development Office videos here."></div>
 		  <div class="project-item" data-filenames="CAFA.jpg, CAS.jpg,CITCS.jpg, COA.jpg, COE.jpg, COL.jpg" data-title="Intramural Sports Event Flags" data-date="2025" data-subcategory="flags" data-description="Placeholder -- add a description for the CITCS, COA, and COE flags here."></div>
         </div>
@@ -1853,6 +1918,7 @@
       <div class="project-grid">
         <div class="project-item" data-filename="LOGO ENTRY_UC-80TH_LOGO_V1.png" data-title="UC 80th Anniversary Logo Entry" data-date="2026" data-description="A commemorative logo entry designed for the University of the Cordilleras' 80th anniversary, balancing tradition and modern vector craftsmanship."></div>
         <div class="project-item" data-filename="INTRAMURALS LOGO.png" data-title="Intramurals 2025" data-date="2025" data-description="An energetic logo built for the 2025 Intramurals, designed to work across banners, jerseys, and event materials."></div>
+		<div class="project-item" data-filename="LOGO-INTRAMURALS-2026.png" data-title="Intramurals 2025" data-date="2026" data-description="The emblem showing the jaguar roaring and the fire symbol consisting colleges colors and identities as one Unite ."></div>
         <div class="project-item" data-filename="12.jpg" data-title="UC-INTTO" data-date="2024" data-description="A logo identity piece created for UC-INTTO, focused on clean lines and strong readability at both large and small sizes."></div>
       </div>
     </div>
