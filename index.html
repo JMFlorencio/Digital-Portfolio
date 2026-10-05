@@ -919,6 +919,35 @@
     padding:4px 12px;
   }
 
+  /* ---------------- WORKSHOPS & CERTIFICATES ----------------
+     Reuses .project-item tiles, so the existing hover overlay, expand
+     button and lightbox work automatically. Plain left-to-right grid
+     (not masonry) since every certificate is the same landscape size. */
+  .cert-wrap{ padding:40px 48px 60px; }
+  .cert-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; }
+  .cert-grid .project-item{ margin:0; }
+  /* All certificate tiles share one landscape size (TESDA's portrait page
+     is letterboxed inside it; the lightbox shows it in full). Featured
+     tiles only get a small green tag. */
+  .cert-grid .project-item{ aspect-ratio:1754 / 1235; }
+  .cert-grid .project-item img{ height:100%; object-fit:contain; }
+  .cert-grid .project-item.featured::after{
+    content:"Featured";
+    position:absolute; top:12px; left:12px; z-index:4;
+    font-size:10px; letter-spacing:.1em; text-transform:uppercase; font-weight:bold;
+    color:#04140b; background:var(--green);
+    border-radius:20px; padding:5px 11px;
+    pointer-events:none;
+  }
+  .cert-grid .project-item.featured .work-type-badge{ display:none; }
+  @media (max-width: 900px){
+    .cert-wrap{ padding:28px 20px 40px; }
+    .cert-grid{ grid-template-columns:repeat(2, 1fr); gap:16px; }
+  }
+  @media (max-width: 560px){
+    .cert-grid{ grid-template-columns:1fr; }
+  }
+
   /* ---------------- CONTACT ---------------- */
   .contact-card{
     max-width:640px;
@@ -1411,6 +1440,7 @@
       <li><a href="#projects">Projects</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#about">About</a></li>
+      <li><a href="#certificates">Certificates</a></li>
       <li><a href="#contact" class="nav-contact">Contact</a></li>
     </ul>
     <button type="button" class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false">
@@ -1425,6 +1455,7 @@
     <a href="#projects" data-mobile-link>Projects</a>
     <a href="#services" data-mobile-link>Services</a>
     <a href="#about" data-mobile-link>About</a>
+    <a href="#certificates" data-mobile-link>Certificates</a>
     <a href="#contact" class="mob-contact" data-mobile-link>Contact</a>
   </div>
 
@@ -1643,6 +1674,7 @@
       <div class="brand-tabs" id="graphicBrandTabs">
         <button class="brand-tab-btn active" data-brand-tab="arfix-studio">Arfix Studio</button>
         <button class="brand-tab-btn" data-brand-tab="uc-sdo">UC-SDO</button>
+        <button class="brand-tab-btn" data-brand-tab="ocushield">Ocushield</button>
         <button class="brand-tab-btn" data-brand-tab="hoyoma">Hoyoma</button>
         <button class="brand-tab-btn" data-brand-tab="skil">SKIL</button>
         <button class="brand-tab-btn" data-brand-tab="sailun">Sailun</button>
@@ -1694,6 +1726,19 @@
 		  <div class="project-item" data-filenames="Chinese Collar1c.png, Chinese Collar2c.png" data-title="UC-SDO Design" data-date="2026" data-subcategory="mockups" data-description="Placeholder -- add more UC-Sports Development Office artwork here."></div>
           <div class="project-item" data-filename="Allied Sports Highlight_compressed.mp4" data-title="UC-SDO Design" data-date="2026" data-subcategory="videos" data-description="Placeholder -- add more UC-Sports Development Office videos here."></div>
 		  <div class="project-item" data-filenames="CAFA.jpg, CAS.jpg,CITCS.jpg, COA.jpg, COE.jpg, COL.jpg" data-title="Intramural Sports Event Flags" data-date="2025" data-subcategory="flags" data-description="Placeholder -- add a description for the CITCS, COA, and COE flags here."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="ocushield">
+        <p class="brand-title">Ocushield</p>
+        <div class="subcategory-filters" data-subfilter-group="ocushield">
+          <button class="subfilter-btn active" data-subfilter="all">All</button>
+          <button class="subfilter-btn" data-subfilter="poster">Posters</button>
+          <button class="subfilter-btn" data-subfilter="video">Video</button>
+        </div>
+        <div class="project-grid">
+          <div class="project-item" data-filenames="Ocushield P1.png, Ocushield P2.png" data-title="Ocushield Poster" data-subcategory="poster" data-description="Placeholder -- add Ocushield artwork here."></div>
+          <div class="project-item" data-filename="Ocushield Video.mp4" data-title="Ocushield Video" data-subcategory="video" data-description="Placeholder -- add Ocushield video here."></div>
         </div>
       </div>
 
@@ -1923,6 +1968,30 @@
       </div>
     </div>
 
+  </div>
+  <div class="section-gap"></div>
+
+  <!-- ================= WORKSHOPS &amp; CERTIFICATES =================
+       Drop each certificate PNG into /assets with the exact filename in
+       data-filename. To add one, copy a tile and change the attributes. -->
+  <section id="certificates" style="padding-bottom:0;">
+    <div class="section-heading">
+      <h2 class="section-label"><span class="label-text">Workshops &amp; Certificates</span></h2>
+    </div>
+  </section>
+
+  <div class="cert-wrap">
+    <div class="project-grid cert-grid">
+        <div class="project-item featured" data-filename="Tesda.png" data-title="Visual Graphic Design NC III" data-date="Aug 18, 2026" data-description="Certificate of Competency from the Technical Education and Skills Development Authority (TESDA), issued under the Philippine TVET Competency Assessment and Certification System in partial fulfillment of the National Qualification Visual Graphic Design NC III. Valid until August 17, 2031."></div>
+        <div class="project-item featured" data-filename="Workshop-9.png" data-title="National Digital Arts Awards 2024 Workshops" data-date="Nov 9, 2024" data-description="Certificate of Participation in the National Digital Arts Awards 2024 Workshops: Foundational Sessions and Technical Workshops, held at Thames International School, Quezon City."></div>
+        <div class="project-item" data-filename="Workshop-10.png" data-title="Behind the Game: Design, Development &amp; Careers" data-date="Jan 28–30, 2026" data-description="Certificate of Participation from Game Makers Myanmar for the &#39;Behind the Game: Design, Development &amp; Careers&#39; webinar."></div>
+        <div class="project-item" data-filename="Workshop-8.png" data-title="Game Dev Magic! Creating a 2D Platformer" data-date="Jan 27, 2026" data-description="Certificate of Participation from the University of Caloocan City Computer Studies Department for the Game Dev Magic! (Creating 2D Platformer Game Live Demo) webinar, part of the Seminar Series of Graduating Students 2022–2026."></div>
+        <div class="project-item" data-filename="Workshop-6.png" data-title="From Office to Online" data-date="Jan 24, 2026" data-description="Certificate from Upskill Multimedia Learning Community for From Office to Online: A Practical Transition Framework for Working Filipinos."></div>
+        <div class="project-item" data-filename="Workshop-4.png" data-title="AI Awareness Campaign through Hour of Code" data-date="Jan 24, 2026" data-description="Certificate of Participation in the Awareness-Raising Campaign on AI through Hour of Code, part of the AI Ready ASEAN Programme by Break The Fake Movement with ASEAN Foundation and Google.org (online via Zoom)."></div>
+        <div class="project-item" data-filename="Workshop-1.png" data-title="Painting Colorful Environments in Clip Studio Paint" data-date="Jan 22, 2026" data-description="Webinar certificate from Graphixly Webinars: Painting colorful environments in Clip Studio Paint with Yi Chen Hock."></div>
+        <div class="project-item" data-filename="Workshop-5.png" data-title="Understanding Visual Composition" data-date="Jan 15, 2026" data-description="Certificate of Participation in the Chinese Frontier Visual Arts Lecture Series (Foreground, Midground, and Background), by SEAMEO RECTED and Go Study Global Education."></div>
+        <div class="project-item" data-filename="Workshop-7.png" data-title="The Hour of A.I." data-description="Certificate of Completion from Code.org for The Hour of A.I., demonstrating an understanding of the basic concepts of Artificial Intelligence."></div>
+    </div>
   </div>
   <div class="section-gap"></div>
 
