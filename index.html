@@ -1293,6 +1293,19 @@
   }
   .app-live-title{ font-size:13px; font-weight:bold; letter-spacing:.04em; text-transform:uppercase; color:#eafff3; }
   .app-live-hint{ font-size:11px; letter-spacing:.06em; color:var(--green-soft); opacity:.9; }
+  /* Capstone Project > Magazine: one full-width flipbook embed */
+  .capstone-embed{ width:100%; }
+  .capstone-embed iframe{
+    display:block; width:100%; height:min(80vh, 720px); min-height:460px;
+    border:1px solid var(--panel-line, rgba(57,255,143,0.25));
+    border-radius:14px; background:#0a120e;
+  }
+  .capstone-embed-link{
+    display:inline-block; margin-top:12px;
+    font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--green-soft); text-decoration:none;
+  }
+  .capstone-embed-link:hover{ color:var(--green); }
   .mobile-preview-open{
     margin-top:16px; font-size:13px; color:var(--green-soft); text-decoration:none;
     border:1px solid rgba(234,255,243,0.25); padding:8px 18px; border-radius:999px;
@@ -1701,7 +1714,7 @@
         <button class="brand-tab-btn" data-brand-tab="beast-tyre">Beast Tyre</button>
         <button class="brand-tab-btn" data-brand-tab="bestlight">Bestlight</button>
 		<button class="brand-tab-btn" data-brand-tab="mma-fiesta">MMA Fiesta</button>
-		<button class="brand-tab-btn" data-brand-tab="sample-tasks">Sample Tasks</button>
+		<button class="brand-tab-btn" data-brand-tab="sample-tasks">Capstone</button>
       </div>
 
     <div class="brand-block" data-brand="arfix-studio">
@@ -1873,6 +1886,17 @@
           <div class="project-item" data-filename="MMA Fiesta Poster.png" data-title="MMA Fiesta Poster" data-date="2026" data-subcategory="poster" data-description="This poster was used on MMA Fiesta a Multimedia Arts Seminar that held on University of The Cordilleras"></div>
           <div class="project-item" data-filename="MMA Fiesta Cert.png" data-title="MMA Fiesta Poster" data-date="2026" data-subcategory="poster" data-description="This certificate was used on MMA Fiesta a Multimedia Arts Seminar that held on University of The Cordilleras ."></div>
 		  <div class="project-item" data-filename="MMAPP_F_RED.png" data-title="MMA Fiesta Poster" data-date="2026" data-subcategory="poster" data-description="This countdown poster was used on MMA Fiesta a Multimedia Arts Seminar that held on University of The Cordilleras ."></div>
+        </div>
+      </div>
+
+      <div class="brand-block" data-brand="sample-tasks">
+        <p class="brand-title">Capstone Project</p>
+        <div class="subcategory-filters" data-subfilter-group="capstone">
+          <button class="subfilter-btn active" data-subfilter="magazine">Magazine</button>
+        </div>
+        <div class="capstone-embed">
+          <iframe src="https://pubhtml5.com/ozbky/ippy/" title="Capstone Project Magazine" loading="lazy" allowfullscreen></iframe>
+          <a class="capstone-embed-link" href="https://pubhtml5.com/homepage/ozbky/" target="_blank" rel="noopener">Open magazine in a new tab &#8599;</a>
         </div>
       </div>
     </div>
